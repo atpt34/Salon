@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path = "/">
+    <Resource
+            name="jdbc/salon"
+            author="Container"
+            type="javax.sql.DataSource"
+            maxTotal="5"
+            maxIdle="2"
+            maxWaitMilis="5000"
+            username="lexa"
+            password="lexa"
+            driverClassName="org.postgresql.Driver"
+            url="jdbc:postgresql://localhost:5432/salon?useSSL=false&amp;characterEncoding=utf-8&amp;serverTimezone=UTC"
+    />
+</Context>
