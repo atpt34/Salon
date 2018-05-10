@@ -15,22 +15,25 @@ import com.oleksa.controller.command.impl.ChangeLanguageCommand;
 import com.oleksa.controller.command.impl.LoginCommand;
 import com.oleksa.controller.command.impl.LogoutCommand;
 import com.oleksa.controller.command.impl.RegisterCommand;
+import com.oleksa.model.service.ServiceFactory;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
 public final class SalonServlet extends HttpServlet {
     
     private final Map<String, Command> commands;
+    private final ServiceFactory serviceFactory;
 
     public SalonServlet() {
         commands = new ConcurrentHashMap<>();
+        this.serviceFactory = new ServiceFactory();
     }
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        commands.put(URL_LOGIN, new LoginCommand());
+        commands.put(URL_LOGIN, new LoginCommand(serviceFactory.getUserService()));
         commands.put(URL_LOGOUT, new LogoutCommand());
-        commands.put(URL_REGISTER, new RegisterCommand());
+        commands.put(URL_REGISTER, new RegisterCommand(serviceFactory.getUserService()));
         commands.put(URL_CHANGE_LANGUAGE, new ChangeLanguageCommand());
         commands.put(PAGE_LOGIN, r -> SERVERPAGE_LOGIN);
         commands.put(PAGE_REGISTER, r -> SERVERPAGE_REGISTER);

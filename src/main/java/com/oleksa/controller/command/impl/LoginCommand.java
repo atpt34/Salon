@@ -18,7 +18,11 @@ import java.util.Map;
 
 public final class LoginCommand implements Command {
     
-//    private UserService service = ServiceFactory.getFactory().getUserService();
+    private UserService service;
+    
+    public LoginCommand(UserService service) {
+    	this.service = service;
+	}
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -36,7 +40,6 @@ public final class LoginCommand implements Command {
         System.out.println(name + " " + pass);
  
         try {
-            UserService service = ServiceFactory.getFactory().getUserService();
             User user = service.findUserByCredentials(name, pass);
             if (!CommandUtil.setLoggedUser(request, user)) {
                 request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);

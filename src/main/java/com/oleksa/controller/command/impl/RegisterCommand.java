@@ -15,9 +15,13 @@ import static com.oleksa.controller.constants.MessagesConstants.*;
 
 public final class RegisterCommand implements Command {
 
-//    private UserService service = ServiceFactory.getFactory().getUserService();
+    private UserService service;
     
-    @Override
+    public RegisterCommand(UserService userService) {
+    	this.service = userService;
+	}
+
+	@Override
     public String execute(HttpServletRequest request) {
         System.out.println("register command");
         if(CommandUtil.isUserLogged(request)) {
@@ -40,7 +44,6 @@ public final class RegisterCommand implements Command {
         
         User user = new User(0, name, email, pass, UserRole.CLIENT, fullname);
         try {
-            UserService service = ServiceFactory.getFactory().getUserService();
             user = service.create(user);
             if (!CommandUtil.setLoggedUser(request, user)) {
                 request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);
