@@ -9,10 +9,14 @@ import com.oleksa.model.exception.NotUniqueNameException;
 
 public interface CrudDao<T, Id> {
 
-    T create(T t) throws NotUniqueNameException, NotUniqueEmailException;
+    T create(T t) throws Exception;
+    
     void deleteById(Id i);
-    T update(T t) throws NotUniqueNameException, NotUniqueEmailException;
+    
+    T update(T t) throws Exception;
+    
     Optional<T> findById(Id id);
+    
     List<T> findAll();
     
 //    long count();

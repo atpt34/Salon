@@ -2,6 +2,7 @@ package com.oleksa.model.service.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import com.oleksa.model.dao.UserDao;
@@ -37,6 +38,11 @@ public class UserServiceImpl implements UserService {
     public User create(User user) throws NotUniqueNameException, NotUniqueEmailException {
         return userDao.create(user);
     }
+
+	@Override
+	public List<User> findAll() {
+		return userDao.findAll();
+	}
 
 
 }

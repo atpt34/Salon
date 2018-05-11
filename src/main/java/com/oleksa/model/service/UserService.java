@@ -1,5 +1,6 @@
 package com.oleksa.model.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.oleksa.model.entity.User;
@@ -12,5 +13,7 @@ public interface UserService {
     User create(User user) throws NotUniqueNameException, NotUniqueEmailException;
     
     User findUserByCredentials(String name, String password) throws InvalidCredentialsException;
+
+	List<User> findAll();
     
 }

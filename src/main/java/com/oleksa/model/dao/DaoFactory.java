@@ -1,5 +1,7 @@
 package com.oleksa.model.dao;
 
+import com.oleksa.model.dao.ScheduleDao;
+
 public abstract class DaoFactory {
 
     DaoFactory() { }
@@ -13,4 +15,6 @@ public abstract class DaoFactory {
     }
     
     public abstract UserDao getUserDao();
+
+	public abstract ScheduleDao getScheduleDao();
 }

@@ -49,6 +49,24 @@ public abstract class JdbcTemplate<T> {
         return result;
     }
     
+    public List<T> findAllByForeignKey(String sql, int foreignId, Function<ResultSet, T> mapToType) {
+    	List<T> result = new ArrayList<>();
+        try(Connection connection = dataSource.getConnection();
+        		PreparedStatement statement = connection.prepareStatement(sql);
+                ) {
+        		statement.setInt(1, foreignId);
+        		try(ResultSet resultSet = statement.executeQuery();) {
+        			while(resultSet.next()) {
+                        T t = mapToType.apply(resultSet);
+                        result.add(t);
+                    }
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+	}
+    
     Optional<T> findById(String sql, Function<ResultSet, T> mapToType, int id) {
         try(Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -115,4 +133,5 @@ public abstract class JdbcTemplate<T> {
                     statement.executeUpdate();
             }
     }
+	
 }

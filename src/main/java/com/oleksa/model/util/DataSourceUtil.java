@@ -1,4 +1,4 @@
-package com.oleksa.model.dao;
+package com.oleksa.model.util;
 
 import java.util.Objects;
 

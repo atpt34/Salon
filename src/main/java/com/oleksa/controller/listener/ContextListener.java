@@ -14,7 +14,6 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("context init listener ");
         Set<String> set = ConcurrentHashMap.newKeySet();
         sce.getServletContext().setAttribute(PARAM_LOGGED_USERS,
                 set);
@@ -23,7 +22,6 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        // TODO Auto-generated method stub
         
     }
 

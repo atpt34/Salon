@@ -11,10 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.oleksa.controller.command.Command;
+import com.oleksa.controller.command.impl.AdminUsersCommand;
 import com.oleksa.controller.command.impl.ChangeLanguageCommand;
+import com.oleksa.controller.command.impl.ClientRecordsCommand;
 import com.oleksa.controller.command.impl.LoginCommand;
 import com.oleksa.controller.command.impl.LogoutCommand;
+import com.oleksa.controller.command.impl.MasterSchedulesCommand;
 import com.oleksa.controller.command.impl.RegisterCommand;
+import com.oleksa.controller.command.impl.ScheduleCommand;
 import com.oleksa.model.service.ServiceFactory;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
@@ -35,11 +39,18 @@ public final class SalonServlet extends HttpServlet {
         commands.put(URL_LOGOUT, new LogoutCommand());
         commands.put(URL_REGISTER, new RegisterCommand(serviceFactory.getUserService()));
         commands.put(URL_CHANGE_LANGUAGE, new ChangeLanguageCommand());
+        commands.put(URL_SCHEDULES, new ScheduleCommand(serviceFactory.getScheduleService()));
+        commands.put(URL_ADMIN_USERS, new AdminUsersCommand(serviceFactory.getUserService()));
+        commands.put(URL_CLIENT_RECORDS, new ClientRecordsCommand());
+        commands.put(URL_MASTER_SCHEDULES, new MasterSchedulesCommand(serviceFactory.getScheduleService()));
+        
         commands.put(PAGE_LOGIN, r -> SERVERPAGE_LOGIN);
         commands.put(PAGE_REGISTER, r -> SERVERPAGE_REGISTER);
         commands.put(PAGE_ADMIN, r -> SERVERPAGE_ADMIN);
         commands.put(PAGE_CLIENT, r -> SERVERPAGE_CLIENT);
         commands.put(PAGE_MASTER, r -> SERVERPAGE_MASTER);
+        
+        
     }
     
     @Override

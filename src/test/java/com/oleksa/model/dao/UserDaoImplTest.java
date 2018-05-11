@@ -93,7 +93,7 @@ public class UserDaoImplTest {
         
         assertTrue(user.isPresent());
         assertEquals(UserRole.ADMIN, user.get().getRole());
-        assertEquals(1, user.get().getId());
+        assertEquals(1, (int) user.get().getId());
     }
     
     @Test
@@ -103,7 +103,7 @@ public class UserDaoImplTest {
         
         assertTrue(user.isPresent());
         assertEquals(UserRole.ADMIN, user.get().getRole());
-        assertEquals(1, user.get().getId());
+        assertEquals(1, (int) user.get().getId());
     }
     
     @Test
@@ -113,7 +113,7 @@ public class UserDaoImplTest {
         
         assertTrue(user.isPresent());
         assertEquals(UserRole.MASTER, user.get().getRole());
-        assertEquals(id, user.get().getId());
+        assertEquals(id, (int) user.get().getId());
     }
     
     @Test
