@@ -3,6 +3,8 @@ package com.oleksa.model.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class Schedule extends AbstractEntity<Integer> {
 
@@ -10,10 +12,10 @@ public class Schedule extends AbstractEntity<Integer> {
 	private LocalDate day;
 	private LocalTime startHour;
 	private LocalTime endHour;
-	private List<Record> records; // no or Set
+	private Set<Record> records;
 
 	public Schedule(Integer id, User master, LocalDate day, LocalTime startHour, LocalTime endHour,
-			List<Record> records) {
+			Set<Record> records) {
 		super(id);
 		this.master = master;
 		this.day = day;
@@ -54,24 +56,17 @@ public class Schedule extends AbstractEntity<Integer> {
 		this.endHour = endHour;
 	}
 
-	public List<Record> getRecords() {
+	public Set<Record> getRecords() {
 		return records;
 	}
 
-	public void setRecords(List<Record> records) {
+	public void setRecords(Set<Record> records) {
 		this.records = records;
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((startHour == null) ? 0 : startHour.hashCode());
-		result = prime * result + ((day == null) ? 0 : day.hashCode());
-		result = prime * result + ((endHour == null) ? 0 : endHour.hashCode());
-		result = prime * result + ((master == null) ? 0 : master.hashCode());
-		result = prime * result + ((records == null) ? 0 : records.hashCode());
-		return result;
+		return Objects.hash(id, master, day, startHour, endHour, records);
 	}
 
 	@Override
@@ -82,39 +77,18 @@ public class Schedule extends AbstractEntity<Integer> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Schedule other = (Schedule) obj;
-		if (startHour == null) {
-			if (other.startHour != null)
-				return false;
-		} else if (!startHour.equals(other.startHour))
-			return false;
-		if (day == null) {
-			if (other.day != null)
-				return false;
-		} else if (!day.equals(other.day))
-			return false;
-		if (endHour == null) {
-			if (other.endHour != null)
-				return false;
-		} else if (!endHour.equals(other.endHour))
-			return false;
-		if (master == null) {
-			if (other.master != null)
-				return false;
-		} else if (!master.equals(other.master))
-			return false;
-		if (records == null) {
-			if (other.records != null)
-				return false;
-		} else if (!records.equals(other.records))
-			return false;
-		return true;
+		Schedule that = (Schedule) obj;
+		return Objects.equals(id, that.id)
+				&& Objects.equals(master, that.master)
+				&& Objects.equals(day, that.day)
+				&& Objects.equals(startHour, that.startHour)
+				&& Objects.equals(endHour, that.endHour)
+				&& Objects.equals(records, that.records);
 	}
 
 	@Override
 	public String toString() {
 		return "Schedule [master=" + master + ", day=" + day + ", startHour=" + startHour + ", endHour=" + endHour
-				/*+ ", records=" + records*/ + "]";
+				+ ", id=" + id + "]";
 	}
-	
 }

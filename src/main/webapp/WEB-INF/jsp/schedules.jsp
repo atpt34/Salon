@@ -6,7 +6,7 @@
 <body>
     <jsp:include page="header.jsp" />
     
-    <h1>schedules ${schedules}</h1>
+    <jsp:include page="paged_schedules_form.jsp" />
     
     <jsp:include page="footer.jsp" />
 </body>

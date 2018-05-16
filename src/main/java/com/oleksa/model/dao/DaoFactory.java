@@ -17,4 +17,7 @@ public abstract class DaoFactory {
     public abstract UserDao getUserDao();
 
 	public abstract ScheduleDao getScheduleDao();
+
+	public abstract RecordDao getRecordDao();
+	
 }

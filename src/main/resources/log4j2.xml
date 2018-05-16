@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" strict="true" name="XMLConfigTest"
+               packages="org.apache.logging.log4j.test">
+
+  <Properties>
+    <Property name="filename">/home/oleksiiubuntu/Public/app.log</Property>
+  </Properties>
+  
+  <Appenders>
+    <Appender type="Console" name="STDOUT">
+      <Layout type="PatternLayout" pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} %M - %msg%n"/>
+    </Appender>
+    <Appender type="File" name="File" fileName="${filename}">
+      <Layout type="PatternLayout">
+        <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+      </Layout>
+    </Appender>
+  </Appenders>
+  
+  <Loggers> 
+    <Root level="debug">
+      <AppenderRef ref="STDOUT" level="INFO"/>
+      <AppenderRef ref="File"/>  
+    </Root>
+  </Loggers>
+  
+</Configuration>

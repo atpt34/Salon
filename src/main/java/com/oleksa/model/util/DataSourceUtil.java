@@ -6,8 +6,13 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class DataSourceUtil {
 
+	private static final Logger LOGGER = LogManager.getLogger(DataSourceUtil.class);
+	
     private static DataSource dataSource;
     
     static {
@@ -18,10 +23,10 @@ public class DataSourceUtil {
         try {
             InitialContext initContext = new InitialContext();
             dataSource = (DataSource) initContext.lookup("java:comp/env/jdbc/salon");
-            System.out.println(dataSource);
+            LOGGER.info(dataSource);
             return dataSource;
         } catch (NamingException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
             throw new RuntimeException(e);
         }
     }

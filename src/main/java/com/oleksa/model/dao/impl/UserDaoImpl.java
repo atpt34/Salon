@@ -56,7 +56,7 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
             statement.setString(4, t.getEmail());
             statement.setString(5, t.getFullname());
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -68,6 +68,7 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
             u.setId(id);
             return u;
         } catch (SQLException e) {
+        	getLogger().error(e);
             String message = e.getMessage();
             if(message.contains(US_NAME_UNIQUE)) {
                 throw new NotUniqueNameException();
@@ -98,6 +99,7 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
             super.update(u, US_UPDATE, UserDaoImpl::prepareUpdate);
             return u;
         } catch (SQLException e) {
+        	getLogger().error(e);
             String message = e.getMessage();
             if(message.contains(US_NAME_UNIQUE)) {
                 throw new NotUniqueNameException();

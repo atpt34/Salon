@@ -1,19 +1,23 @@
 package com.oleksa.model.entity;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import java.util.Set;
 
 public class Record extends AbstractEntity<Integer> {
 
 	private User client;
 	private LocalTime hour;
+	private LocalDate day;
 	private Comment comment;
 	private Set<Schedule> schedules;
 	
-	public Record(Integer id, User client, LocalTime hour, Comment comment, Set<Schedule> schedules) {
+	public Record(Integer id, User client, LocalTime hour, LocalDate day, Comment comment, Set<Schedule> schedules) {
 		super(id);
 		this.client = client;
 		this.hour = hour;
+		this.day = day;
 		this.comment = comment;
 		this.schedules = schedules;
 	}
@@ -34,6 +38,14 @@ public class Record extends AbstractEntity<Integer> {
 		this.hour = hour;
 	}
 
+	public LocalDate getDay() {
+		return day;
+	}
+
+	public void setDay(LocalDate day) {
+		this.day = day;
+	}
+
 	public Comment getComment() {
 		return comment;
 	}
@@ -52,13 +64,7 @@ public class Record extends AbstractEntity<Integer> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((client == null) ? 0 : client.hashCode());
-		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
-		result = prime * result + ((hour == null) ? 0 : hour.hashCode());
-		result = prime * result + ((schedules == null) ? 0 : schedules.hashCode());
-		return result;
+		return Objects.hash(id, client, hour, day, comment, schedules);
 	}
 
 	@Override
@@ -69,33 +75,19 @@ public class Record extends AbstractEntity<Integer> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Record other = (Record) obj;
-		if (client == null) {
-			if (other.client != null)
-				return false;
-		} else if (!client.equals(other.client))
-			return false;
-		if (comment == null) {
-			if (other.comment != null)
-				return false;
-		} else if (!comment.equals(other.comment))
-			return false;
-		if (hour == null) {
-			if (other.hour != null)
-				return false;
-		} else if (!hour.equals(other.hour))
-			return false;
-		if (schedules == null) {
-			if (other.schedules != null)
-				return false;
-		} else if (!schedules.equals(other.schedules))
-			return false;
-		return true;
+		Record that = (Record) obj;
+		return Objects.equals(id, that.id)
+				&& Objects.equals(client, that.client)
+				&& Objects.equals(hour, that.hour)
+				&& Objects.equals(day, that.day)
+				&& Objects.equals(comment, that.comment)
+				&& Objects.equals(schedules, that.schedules);
+		
 	}
 
 	@Override
 	public String toString() {
-		return "Record [client=" + client + ", hour=" + hour + ", comment=" + comment /* + ", schedules=" + schedules*/
+		return "Record [client=" + client + ", hour=" + hour + ", day=" + day + ", comment=" + comment /* + ", schedules=" + schedules*/
 				+ "]";
 	}
 	

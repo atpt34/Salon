@@ -1,14 +1,18 @@
 package com.oleksa.model.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.oleksa.model.dao.ScheduleDao;
 import com.oleksa.model.entity.Schedule;
 import com.oleksa.model.entity.User;
+import com.oleksa.model.pagination.PaginationResult;
 import com.oleksa.model.service.ScheduleService;
 
 public class ScheduleServiceImpl implements ScheduleService {
 
+	private static final int DEFAULT_ITEMS_ON_PAGE = 5;
 	private ScheduleDao scheduleDao;
 
 	public ScheduleServiceImpl(ScheduleDao scheduleDao) {
@@ -17,8 +21,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public Schedule create(Schedule schedule) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return scheduleDao.create(schedule);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -28,7 +36,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public List<Schedule> findAllByMaster(User master) {
-		return scheduleDao.findAllByMasterId(master.getId());
+		return scheduleDao.findAllByMasterIdWithRecords(master.getId());
+	}
+
+	@Override
+	public PaginationResult<Schedule> findPage(int page) {
+		return scheduleDao.findPage(page, DEFAULT_ITEMS_ON_PAGE);
+	}
+
+	@Override
+	public List<Schedule> findFreeOnDayAndTime(LocalDate day, LocalTime time) {
+		return scheduleDao.findFreeOnDayAndTime(day, time);
 	}
 
 }

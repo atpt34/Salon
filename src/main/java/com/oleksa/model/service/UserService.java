@@ -15,5 +15,7 @@ public interface UserService {
     User findUserByCredentials(String name, String password) throws InvalidCredentialsException;
 
 	List<User> findAll();
+	
+	User updateToMaster(User user) throws NotUniqueNameException, NotUniqueEmailException;
     
 }

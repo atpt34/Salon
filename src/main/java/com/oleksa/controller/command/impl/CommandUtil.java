@@ -7,18 +7,25 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.oleksa.model.entity.User;
 import com.oleksa.model.entity.UserRole;
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
 public final class CommandUtil {
 
+	private static final Logger LOGGER = LogManager.getLogger(CommandUtil.class);
+	
     private CommandUtil() { }
 
     public static boolean setLoggedUser(HttpServletRequest request, User user) {
         if(getLoggedUsers(request).add(user.getName())) {
             HttpSession session = request.getSession();
             session.setAttribute(PARAM_USER, Optional.of(user));
+            LOGGER.info("login user: " + user);
+            LOGGER.info("logged users: " + getLoggedUsers(request));
             return true;
         }
         return false;
@@ -31,6 +38,8 @@ public final class CommandUtil {
         if (user.isPresent()) {
             getLoggedUsers(request).remove(user.get().getName());
             session.setAttribute(PARAM_USER, Optional.empty());
+            LOGGER.info("logout user: " + user.get());
+            LOGGER.info("logged users: " + getLoggedUsers(request));
         }
     }
     

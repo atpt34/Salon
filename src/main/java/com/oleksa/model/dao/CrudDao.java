@@ -3,12 +3,10 @@ package com.oleksa.model.dao;
 import java.util.List;
 import java.util.Optional;
 
-import com.oleksa.model.entity.User;
-import com.oleksa.model.exception.NotUniqueEmailException;
-import com.oleksa.model.exception.NotUniqueNameException;
+import com.oleksa.model.logger.Loggable;
 
-public interface CrudDao<T, Id> {
-
+public interface CrudDao<T, Id> extends Loggable {
+	
     T create(T t) throws Exception;
     
     void deleteById(Id i);

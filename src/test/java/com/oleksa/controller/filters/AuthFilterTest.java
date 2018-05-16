@@ -47,7 +47,7 @@ public class AuthFilterTest {
     public void testDoFilterOnIndex() throws IOException, ServletException {
         for(UserRole role : UserRole.values()) {
             User user = mock(User.class);
-            when(user.getRole()).thenReturn(role);
+//            when(user.getRole()).thenReturn(role); // should not be called on index page
             commonForRoles(Optional.of(user));
         }
         commonForRoles(Optional.empty());

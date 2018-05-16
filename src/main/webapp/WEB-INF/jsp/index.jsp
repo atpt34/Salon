@@ -7,7 +7,8 @@
     <jsp:include page="header.jsp" />
     
     <h2 align="center"><fmt:message key="page.title"/></h2>
-    <p> <a href="${pageContext.request.contextPath}/schedules" ><fmt:message key="page.schedules"/></a> </p>
+    
+    <jsp:include page="paged_schedules_form.jsp" /> 
     
     <jsp:include page="footer.jsp" />
 </body>

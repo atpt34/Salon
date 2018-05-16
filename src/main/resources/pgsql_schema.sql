@@ -27,6 +27,12 @@ CREATE TABLE record_t (
 );
 ALTER TABLE record_t ADD CONSTRAINT record_pk PRIMARY KEY(rc_id);
 CREATE UNIQUE INDEX rc_comm_un ON record_t (rc_comment_id);
+ALTER TABLE "record_t"
+ALTER "rc_comment_id" TYPE integer,
+ALTER "rc_comment_id" DROP DEFAULT,
+ALTER "rc_comment_id" DROP NOT NULL;
+COMMENT ON COLUMN "record_t"."rc_comment_id" IS '';
+COMMENT ON TABLE "record_t" IS '';
 CREATE TABLE schedule_t (
     sc_id serial NOT NULL,
     sc_master_id int4 NOT NULL,

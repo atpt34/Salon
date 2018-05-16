@@ -1,5 +1,7 @@
 package com.oleksa.model.entity;
 
+import java.util.Objects;
+
 public class Comment extends AbstractEntity<Integer> {
 
 	private String text;
@@ -26,11 +28,7 @@ public class Comment extends AbstractEntity<Integer> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + stars;
-		result = prime * result + ((text == null) ? 0 : text.hashCode());
-		return result;
+		return Objects.hash(id, text, stars);
 	}
 
 	@Override
@@ -42,19 +40,14 @@ public class Comment extends AbstractEntity<Integer> {
 		if (getClass() != obj.getClass())
 			return false;
 		Comment other = (Comment) obj;
-		if (stars != other.stars)
-			return false;
-		if (text == null) {
-			if (other.text != null)
-				return false;
-		} else if (!text.equals(other.text))
-			return false;
-		return true;
+		return Objects.equals(id, other.id)
+				&& Objects.equals(text, other.text)
+				&& Objects.equals(stars, other.stars);
 	}
 
 	@Override
 	public String toString() {
-		return "Comment [text=" + text + ", stars=" + stars + "]";
+		return "Comment [id=" + id + ", text=" + text + ", stars=" + stars + "]";
 	}
 	
 }

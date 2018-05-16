@@ -17,6 +17,7 @@ public class MasterSchedulesCommand implements Command {
 		this.scheduleService = scheduleService;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
 		System.out.println("master schedules cmd");

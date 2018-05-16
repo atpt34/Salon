@@ -10,6 +10,17 @@ public interface MessagesConstants {
     String PARAM_USER = "user";
     String PARAM_LOGGED_USERS = "loggedUsers";
     String PARAM_LANG = "lang";
+    String PARAM_LANG_UA = "ua";
+    String PARAM_LANG_EN = "en";
+    String PARAM_PAGE = "page";
+    String PARAM_TEXT = "text";
+    String PARAM_STARS = "stars";
+    String PARAM_TIME = "time";
+    String PARAM_START_TIME = "start_time";
+    String PARAM_FINISH_TIME = "finish_time";
+    String PARAM_DATE = "date";
+    String PARAM_ID = "id";
+    String PARAM_TOTAL_PAGES = "totalPages";
     String PARAM_ERROR = "error";
     
     String PARAM_SCHEDULES = "schedules";
@@ -22,16 +33,25 @@ public interface MessagesConstants {
     String URL_LOGIN = "/login";
     String URL_INDEX = "/index";
     
-    String URL_SCHEDULES = "/schedules";
+//    String URL_SCHEDULES = "/schedules";
     String URL_ADMIN_USERS = "/admin/users";
+    String URL_ADMIN_UPDATE_USER = "/admin/update_user";
     String URL_CLIENT_RECORDS = "/client/records";
+    String URL_CLIENT_CREATE_RECORD = "/client/create_record";
+    String URL_CLIENT_CREATE_COMMENT = "/client/create_comment";
+    String URL_CLIENT_SEARCH_SCHEDULE = "/client/search_schedule";
     String URL_MASTER_SCHEDULES = "/master/schedules";
+    String URL_MASTER_CREATE_SCHEDULE = "/master/create_schedule";
     
     String PAGE_REDIRECT = "redirect:";
     String PAGE_LOGIN = "/login_page";
     String PAGE_REGISTER = "/register_page";
     String PAGE_ADMIN = "/admin_page";
+    String PAGE_ADMIN_COMMENTS = "/admin/comments_page";
     String PAGE_MASTER = "/master_page";
+    String PAGE_MASTER_CREATE_SCHEDULE = "/master/create_schedule_page";
+    String PAGE_CLIENT_CREATE_COMMENT = "/client/create_comment_page";
+    String PAGE_CLIENT_SEARCH_SCHEDULE = "/client/search_schedule_page";
     String PAGE_CLIENT = "/client_page";
 
     String WEBINF_JSP = "./WEB-INF/jsp";
@@ -47,9 +67,12 @@ public interface MessagesConstants {
     String PARENT_DIR = "../";
     String SERVERPAGE_ADMIN_COMMENTS = PARENT_DIR + WEBINF_JSP + "/admin/comments.jsp";
     String SERVERPAGE_ADMIN_USERS = PARENT_DIR + WEBINF_JSP + "/admin/users.jsp";
-    String SERVERPAGE_ADMIN_RECORDS = PARENT_DIR + WEBINF_JSP + "/admin/records.jsp";
+//    String SERVERPAGE_ADMIN_RECORDS = PARENT_DIR + WEBINF_JSP + "/admin/records.jsp";
     String SERVERPAGE_MASTER_SCHEDULES = PARENT_DIR + WEBINF_JSP + "/master/schedules.jsp";
-    String SERVERPAGE_CLIENT_COMMENTS = PARENT_DIR + WEBINF_JSP + "/client/make_comment.jsp";
+    String SERVERPAGE_MASTER_CREATE_SCHEDULE = PARENT_DIR + WEBINF_JSP + "/master/create_schedule.jsp";
+    String SERVERPAGE_CLIENT_CREATE_COMMENT = PARENT_DIR + WEBINF_JSP + "/client/create_comment.jsp";
+    String SERVERPAGE_CLIENT_SEARCH_SCHEDULE = PARENT_DIR + WEBINF_JSP + "/client/search_schedule.jsp";
+//    String SERVERPAGE_CLIENT_CREATE_RECORD = PARENT_DIR + WEBINF_JSP + "/client/create_record.jsp";
     String SERVERPAGE_CLIENT_RECORDS = PARENT_DIR + WEBINF_JSP + "/client/records.jsp";
 
     String FOLDER_ADMIN = "admin";

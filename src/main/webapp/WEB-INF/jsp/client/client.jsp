@@ -8,8 +8,8 @@
     
     <h1><fmt:message key="hello"/> <fmt:message key="client"/> ${sessionScope.user}</h1>
     <p> <a href="${pageContext.request.contextPath}/client/records" ><fmt:message key="page.records"/></a> </p>
-    <p> <a href="${pageContext.request.contextPath}/client/createComment_page" ><fmt:message key="page.createComment"/></a> </p>
-    <p> <a href="${pageContext.request.contextPath}/client/createRecord_page" ><fmt:message key="page.createRecord"/></a> </p>
+    <p> <a href="${pageContext.request.contextPath}/client/create_comment_page" ><fmt:message key="page.createComment"/></a> </p>
+    <p> <a href="${pageContext.request.contextPath}/client/search_schedule_page" ><fmt:message key="page.searchSchedule"/></a> </p>
     
     <jsp:include page="../footer.jsp" />
     

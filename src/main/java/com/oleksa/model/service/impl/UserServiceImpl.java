@@ -44,5 +44,11 @@ public class UserServiceImpl implements UserService {
 		return userDao.findAll();
 	}
 
+	@Override
+	public User updateToMaster(User user) throws NotUniqueNameException, NotUniqueEmailException {
+		user.setRole(UserRole.MASTER);
+		return userDao.update(user);
+	}
+
 
 }

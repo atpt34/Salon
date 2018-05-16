@@ -13,7 +13,9 @@ import java.util.function.Function;
 
 import javax.sql.DataSource;
 
-public abstract class JdbcTemplate<T> {
+import com.oleksa.model.logger.Loggable;
+
+public abstract class JdbcTemplate<T> implements Loggable {
 
     DataSource dataSource;
     
@@ -44,7 +46,7 @@ public abstract class JdbcTemplate<T> {
                 result.add(t);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            getLogger().error(e);
         }
         return result;
     }
@@ -62,7 +64,7 @@ public abstract class JdbcTemplate<T> {
                     }
                 }
         } catch (SQLException e) {
-            e.printStackTrace();
+        	getLogger().error(e);
         }
         return result;
 	}
@@ -78,7 +80,7 @@ public abstract class JdbcTemplate<T> {
                         }
                     }
             } catch (SQLException e) {
-                e.printStackTrace();
+            	getLogger().error(e);
             }
             return Optional.empty();
     }
@@ -94,7 +96,7 @@ public abstract class JdbcTemplate<T> {
                         }
                     }
             } catch (SQLException e) {
-                e.printStackTrace();
+            	getLogger().error(e);
             }
             return Optional.empty();
     }
@@ -106,6 +108,7 @@ public abstract class JdbcTemplate<T> {
                     statement.setInt(1, id);
                     statement.executeUpdate();
             } catch (SQLException e) {
+            	getLogger().error(e);
                 e.printStackTrace();
            }
     }
@@ -121,6 +124,7 @@ public abstract class JdbcTemplate<T> {
                             return keys.getInt(1);
                         }
                     }
+                    getLogger().error("no keys");
                     throw new RuntimeException("no keys");
          }
     }

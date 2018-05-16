@@ -33,7 +33,7 @@ public final class RegisterCommand implements Command {
         String email = request.getParameter(PARAM_EMAIL);
         String fullname = request.getParameter(PARAM_FULLNAME);
         
-        if(!ValidatorUtil.validName(name)
+        if(!ValidatorUtil.isValidName(name)
                 || !ValidatorUtil.validPassword(pass)
                 || !ValidatorUtil.validEmail(email)
                 || !ValidatorUtil.validFullname(fullname)){

@@ -32,7 +32,7 @@ public final class LoginCommand implements Command {
         }
         String name = request.getParameter(PARAM_NAME);
         String pass = request.getParameter(PARAM_PASS);
-        if (!ValidatorUtil.validName(name)
+        if (!ValidatorUtil.isValidName(name)
                 || !ValidatorUtil.validPassword(pass)){
             request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
             return PAGE_LOGIN;

@@ -17,12 +17,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.oleksa.controller.SalonServlet;
 import com.oleksa.controller.exception.AccessDeniedException;
 import com.oleksa.model.entity.User;
 import com.oleksa.model.entity.UserRole;
+import com.oleksa.model.logger.Loggable;
+
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
-public final class AuthFilter implements Filter {
+public final class AuthFilter implements Filter, Loggable {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -33,25 +39,16 @@ public final class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        System.out.println("AuthFilter doFilter");
-
         final HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
-        ServletContext context = request.getServletContext();
         String path = req.getRequestURI();
-        System.out.println(path);
-        System.out.println(context.getAttribute(PARAM_LOGGED_USERS));
+        getLogger().info("path: " + path);
         Optional<User> user = (Optional<User>) session.getAttribute(PARAM_USER);
-        if(user.isPresent()) {
-            UserRole role = user.get().getRole();
-            PathToRoleMapper.map
-            .forEach((k, v) -> { if (path.contains(k) && role != v)
-              throw new AccessDeniedException(MSG_ACCESS_DENIED); } );
-        } else {
-            PathToRoleMapper.map
-            .forEach((k, v) -> { if (path.contains(k))
-              throw new AccessDeniedException(MSG_ACCESS_DENIED); } );
-        }
+        PathToRoleMapper.map
+	      .forEach((k, v) -> { 
+	    	  if (path.contains(k) && (!user.isPresent() || user.get().getRole() != v))
+	    		  throw new AccessDeniedException(MSG_ACCESS_DENIED); 
+	    	  } );
         chain.doFilter(request,response);
     }
     

@@ -7,12 +7,17 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.oleksa.model.entity.User;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
 public class SessionListener implements HttpSessionListener {
 
+	private static final Logger LOGGER = LogManager.getLogger(SessionListener.class);
+	
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
         HttpSession session = httpSessionEvent.getSession();
@@ -29,6 +34,7 @@ public class SessionListener implements HttpSessionListener {
             ((Set<String>) httpSessionEvent
                     .getSession().getServletContext()
                     .getAttribute(PARAM_LOGGED_USERS)).remove(user.get().getName());
+            LOGGER.info("session expired " + user.get());
         }
     }
 
