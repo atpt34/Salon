@@ -1,8 +1,10 @@
 <%@ include file="tags.jsp" %>
  <h1><fmt:message key="page.schedules"/></h1>
   <c:forEach var="sc" items="${schedules}">
-  Master: ${sc.key}  <br/>
-  Schedules: <c:forEach var="scd" items="${sc.value}"> ${scd} <br/> 
+  <fmt:message key="master"/>: ${sc.key.fullname}  <br/>
+  <fmt:message key="schedule"/>: <br/>
+  			<c:forEach var="scd" items="${sc.value}">
+  			 ${scd.day } ${scd.startHour } - ${scd.endHour }<br/> 
   		   </c:forEach>
   		<br/>
   		<br/>

@@ -43,7 +43,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 		try {
 			statement.setInt(1, t.getMaster().getId());
 			statement.setDate(2, Date.valueOf(t.getDay()));
-			statement.setTime(3, Time.valueOf(t.getBeginHour()));
+			statement.setTime(3, Time.valueOf(t.getStartHour()));
 			statement.setTime(4, Time.valueOf(t.getEndHour()));
 		} catch (SQLException e) {
 			LOGGER.error(e);
@@ -88,7 +88,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 	@Override
 	public List<Schedule> findAllByMasterIdWithRecords(int masterId) {
 		try (Connection connection = dataSource.getConnection();
-			PreparedStatement statement = connection.prepareStatement(SC_SELECT_LIMIT);
+			PreparedStatement statement = connection.prepareStatement(SC_SELECT_BY_MASTER_WITH_RECORDS);
             ) {
 			Map<Schedule, Set<Record>> result = new HashMap<>();
 			statement.setInt(1, masterId);

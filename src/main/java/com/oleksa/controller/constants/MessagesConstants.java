@@ -75,6 +75,9 @@ public interface MessagesConstants {
 //    String SERVERPAGE_CLIENT_CREATE_RECORD = PARENT_DIR + WEBINF_JSP + "/client/create_record.jsp";
     String SERVERPAGE_CLIENT_RECORDS = PARENT_DIR + WEBINF_JSP + "/client/records.jsp";
 
+    String ATTRIBUTE_SCHEDULES = "attribute_schedules";
+    String ATTRIBUTE_USERS = "attribute_users";
+    
     String FOLDER_ADMIN = "admin";
     String FOLDER_CLIENT = "client";
     String FOLDER_MASTER = "master";
@@ -85,5 +88,7 @@ public interface MessagesConstants {
     String MSG_INVALID_CREDENTIALS = "error.invalid.credentials";
     String MSG_NAME_IN_USE = "error.inuse.name";
     String MSG_EMAIL_IN_USE = "error.inuse.email";
+    String MSG_RETRY_SEARCH = "error.retry.search";
+    String MSG_NO_PREV_SEARCH = "error.no.prev.search";
     
 }

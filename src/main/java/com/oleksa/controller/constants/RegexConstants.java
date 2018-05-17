@@ -5,7 +5,7 @@ public interface RegexConstants {
     String RE_NAME = "[A-Za-z][0-9A-Za-z]{5,15}";
     String RE_PASSWORD = "[0-9A-Za-z_.]{6,15}";
     String RE_EMAIL = "[A-Za-z][0-9A-Za-z]{4,16}@([A-Za-z]{1,16}\\.){1,4}[a-z]{1,15}";
-    String RE_FULLNAME = "([A-Z][a-z]{2,32})(-[A-Z][a-z]{2,32})? [A-Z]\\. [A-Z]\\.";
+    String RE_FULLNAME = "(([A-Z][a-z]{2,32})(-[A-Z][a-z]{2,32})? ([A-Z]\\.){2})|(([А-ЯЄІЇҐ\'][а-яєіїґ\']{2,32}) (([А-ЯЄІЇҐ\'][а-яєіїґ\']{2,32} [А-ЯЄІЇҐ\'][а-яєіїґ\']{2,32})|(([А-ЯЄІЇҐ]\\.){2})))";
     String RE_PAGE = "[1-9][0-9]{0,32}";
     String RE_ID = "[1-9][0-9]{0,9}";
     String RE_STARS = "[0-5]";

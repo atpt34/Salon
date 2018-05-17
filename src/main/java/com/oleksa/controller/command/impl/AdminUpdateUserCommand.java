@@ -2,6 +2,10 @@ package com.oleksa.controller.command.impl;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.oleksa.controller.command.Command;
@@ -21,13 +25,24 @@ public class AdminUpdateUserCommand implements Command, Loggable {
 		this.userService = userService;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
 		String idParam = request.getParameter(PARAM_ID);
 		try {
 			int id = ValidatorUtil.parseIdParameter(idParam);
-			User user = null;
-			userService.updateToMaster(user);
+			List<User> found = (List<User>) request.getSession().getAttribute(ATTRIBUTE_USERS);
+			if (Objects.isNull(found)) {
+				getLogger().error(MSG_NO_PREV_SEARCH);
+				return SERVERPAGE_ADMIN_USERS;
+			}
+			getLogger().debug(found);
+			Optional<User> first = found.stream().filter(k -> k.getId() == id).findFirst();
+			if(!first.isPresent()) {
+				getLogger().error(MSG_NO_PREV_SEARCH);
+				return SERVERPAGE_ADMIN_USERS;
+			}
+			userService.updateToMaster(first.get());
 		} catch (UnparsableIdException e) {
 			e.printStackTrace();
 			getLogger().error(e);

@@ -23,6 +23,7 @@ public class AdminUsersCommand implements Command {
 		System.out.println("admin users command");
 		List<User> findAll = service.findAll();
 		System.out.println(findAll);
+		request.getSession().setAttribute(ATTRIBUTE_USERS, findAll);
 		request.setAttribute(PARAM_USERS, findAll);
 		return SERVERPAGE_ADMIN_USERS;
 	}

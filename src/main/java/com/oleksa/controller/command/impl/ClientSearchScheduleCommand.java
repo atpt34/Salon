@@ -27,9 +27,10 @@ public class ClientSearchScheduleCommand implements Command {
 		String dateParam = request.getParameter(PARAM_DATE);
 		LocalTime time = ValidatorUtil.parseTimeParameter(timeParam);
 		LocalDate date = ValidatorUtil.parseDateParameter(dateParam);
-		List<Schedule> find = scheduleService.findFreeOnDayAndTime(date, time); // set to session
+		List<Schedule> find = scheduleService.findFreeOnDayAndTime(date, time);
+		request.getSession().setAttribute(ATTRIBUTE_SCHEDULES, find);
 		request.setAttribute(PARAM_SCHEDULES, find);
-		request.setAttribute(PARAM_DATE, LocalDate.now());
+		request.setAttribute(PARAM_DATE, date);
 		request.setAttribute(PARAM_TIME, time);
 		return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
 	}

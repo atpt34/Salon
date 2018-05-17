@@ -39,12 +39,12 @@ public class Schedule extends AbstractEntity<Integer> {
 	public void setDay(LocalDate day) {
 		this.day = day;
 	}
-
-	public LocalTime getBeginHour() {
+	
+	public LocalTime getStartHour() {
 		return startHour;
 	}
 
-	public void setBeginHour(LocalTime startHour) {
+	public void setStartHour(LocalTime startHour) {
 		this.startHour = startHour;
 	}
 
@@ -91,4 +91,5 @@ public class Schedule extends AbstractEntity<Integer> {
 		return "Schedule [master=" + master + ", day=" + day + ", startHour=" + startHour + ", endHour=" + endHour
 				+ ", id=" + id + "]";
 	}
+
 }

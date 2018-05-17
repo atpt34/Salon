@@ -6,7 +6,9 @@
 <body>
     <jsp:include page="../header.jsp" />
     
-    <h1>records ${records}</h1>
+    <c:forEach var="rc" items="${records}">
+		<input type="checkbox" name="id" value="${rc}" />${rc.day} ${rc.hour} ${empty rc.comment ? 'no comment on this record' : '' }<br/>
+	</c:forEach>
     
     <jsp:include page="../footer.jsp" />
 </body>

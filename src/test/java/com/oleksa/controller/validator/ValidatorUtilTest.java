@@ -26,6 +26,15 @@ public class ValidatorUtilTest {
 	}
 	
 	@Test
+	public void testParseValidFullnameUkr() {
+		Stream.of(null, "" , "Єґер" , "Полюй", "Дудак Вася", "Лариса Л.", "Треть’як Богдан Г.")
+		.forEach(p -> assertFalse(ValidatorUtil.validFullname(p)));
+		
+		Stream.of("Іванов І.І.", "Петро Геннадій Дмитрович")
+		.forEach(p -> assertTrue(ValidatorUtil.validFullname(p)));
+	}
+	
+	@Test
 	public void testParsePageParam() {
 		Stream.of(null, "", "shit", "page", "-256", "-1", "0")
 		.forEach(p -> assertEquals(0, ValidatorUtil.parsePageParameter(p)));
