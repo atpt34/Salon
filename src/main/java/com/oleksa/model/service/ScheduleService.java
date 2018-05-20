@@ -20,4 +20,6 @@ public interface ScheduleService {
 	
 	List<Schedule> findFreeOnDayAndTime(LocalDate day, LocalTime time);
 
+	void delete(Schedule schedule);
+
 }

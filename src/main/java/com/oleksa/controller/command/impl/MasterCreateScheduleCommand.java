@@ -22,6 +22,7 @@ public class MasterCreateScheduleCommand implements Command {
 		this.scheduleService = scheduleService;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
 		String dateParam = request.getParameter(PARAM_DATE);

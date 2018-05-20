@@ -80,4 +80,13 @@ public class SalonServletTest  {
         assertEquals(hello, captor.getValue());
     }
     
+    @Test 
+    public void testReplacePath() {
+    	String uri = "/index";
+    	String context = "/BeautySalon";
+    	assertEquals(uri, (uri + context).replaceAll(context, ""));
+    	assertEquals(uri, (context + uri).replaceAll(context, ""));
+    	assertEquals(uri, (context + context + uri).replaceAll(context, ""));
+    	assertEquals(uri, (context + context + context + uri).replaceAll(context, ""));
+    }
 }

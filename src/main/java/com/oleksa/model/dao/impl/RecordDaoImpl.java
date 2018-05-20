@@ -9,7 +9,11 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -106,10 +110,13 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
                     }
                 }
 			}
-			try(PreparedStatement statement = connection.prepareStatement(RC_UPDATE_COMMENT, Statement.RETURN_GENERATED_KEYS);) {
+			try(PreparedStatement statement = connection.prepareStatement(RC_UPDATE, Statement.RETURN_GENERATED_KEYS);) {
 				Comment comment = record.getComment();
-				statement.setInt(1, comment.getId());
-				statement.setInt(2, record.getId());
+				statement.setInt(1, record.getClient().getId());
+				statement.setTime(2, Time.valueOf(record.getHour()));
+				statement.setDate(3, Date.valueOf(record.getDay()));
+				statement.setInt(4, comment.getId());
+				statement.setInt(5, record.getId());
                 statement.executeUpdate();
 			}
 			connection.commit();
@@ -122,60 +129,54 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
 
 	@Override
 	public Optional<Record> findById(Integer id) {
-		return super.findById(RC_COMMENT_ID, RecordDaoImpl::mapToRecord, id);
+		return super.findById(RC_COMMENT_ID, JdbcMapperImpl::mapToRecord, id);
 	}
 
 	@Override
 	public List<Record> findAll() {
-		return null;
+		return super.findAll(RC_SELECT_ALL, JdbcMapperImpl::mapToRecord);
 	}
 
 	@Override
 	public List<Record> findAllByClientId(int clientId) {
-		return super.findAllByForeignKey(RC_SELECT_BY_CLIENT, clientId, RecordDaoImpl::mapToRecord);
+		return super.findAllByForeignKey(RC_SELECT_BY_CLIENT, clientId, JdbcMapperImpl::mapToRecord);
+	}
+	
+	@Override
+	public List<Record> findAllByClientIdWithMaster(int clientId) {
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement statement = connection.prepareStatement(RC_SELECT_ALL_WITH_MASTER);
+	            ) {
+			Map<Record, Set<Schedule>> result = new HashMap<>();
+			statement.setInt(1, clientId);
+			try(ResultSet resultSet = statement.executeQuery();) {
+				Map<Integer, Schedule> schedules = new HashMap<>();
+				Map<Integer, User> masters = new HashMap<>();
+    			while(resultSet.next()) {
+    	            User master = JdbcMapperImpl.mapToUser(resultSet);
+    	            int masterId = master.getId();
+					masters.putIfAbsent(masterId, master);
+    				Schedule schedule = JdbcMapperImpl.mapToSchedule(resultSet);
+    				schedule.setMaster(masters.get(masterId));
+    				int scheduleId = schedule.getId();
+					schedules.putIfAbsent(scheduleId, schedule);
+					Record record = JdbcMapperImpl.mapToRecord(resultSet);
+    				result.putIfAbsent(record, new HashSet<>());
+					result.get(record).add(schedules.get(scheduleId));
+    			}
+			}
+			getLogger().debug(result);
+			result.forEach((k, v) -> k.setSchedules(v));
+			return new ArrayList<>(result.keySet());
+		} catch (SQLException e) {
+            getLogger().error(e);
+            throw new RuntimeException(e);
+        }
 	}
 	
 	@Override
 	public List<Record> findAllWithComments() {
-		return super.findAll(RC_SELECT_ALL_COMMENTS, RecordDaoImpl::mapToRecordWithCommentAndUser);
+		return super.findAll(RC_SELECT_ALL_COMMENTS, JdbcMapperImpl::mapToRecordWithCommentAndUser);
 	}
 
-	private static Record mapToRecord(ResultSet resultSet) {
-		try {
-            int id = resultSet.getInt(RC_ID);
-			User client = null;
-			LocalTime hour = resultSet.getTime(RC_HOUR).toLocalTime();
-			LocalDate day = resultSet.getDate(RC_DAY).toLocalDate();
-			Comment comment = null;
-			Set<Schedule> schedules = null;
-			return new Record(id, client, hour, day, comment, schedules);
-        } catch (SQLException e) {
-        	LOGGER.error(e);
-            throw new RuntimeException(e);
-        }
-	}
-
-	private static Record mapToRecordWithCommentAndUser(ResultSet resultSet) {
-		try {
-			UserRole role = UserRole.valueOf(resultSet.getString(US_ROLE).toUpperCase());
-            String password = resultSet.getString(US_PASSWORD);
-            String name = resultSet.getString(US_NAME);
-            String email = resultSet.getString(US_EMAIL);
-            int clientId = resultSet.getInt(US_ID);
-            String fullname = resultSet.getString(US_FULL_NAME);
-            User client = new User(clientId, name, email, password, role, fullname);
-            int commentId = resultSet.getInt(CM_ID);
-            String text = resultSet.getString(CM_WORDS);
-			int stars = resultSet.getInt(CM_STARS);
-			Comment comment = new Comment(commentId, text, stars);
-            int id = resultSet.getInt(RC_ID);
-			LocalTime hour = resultSet.getTime(RC_HOUR).toLocalTime();
-			LocalDate day = resultSet.getDate(RC_DAY).toLocalDate();
-			Set<Schedule> schedules = null;
-			return new Record(id, client, hour, day, comment, schedules);
-        } catch (SQLException e) {
-        	LOGGER.error(e);
-            throw new RuntimeException(e);
-        }
-	}
 }

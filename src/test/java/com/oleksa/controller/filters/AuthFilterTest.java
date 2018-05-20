@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,12 +36,14 @@ public class AuthFilterTest {
     @Mock
     private FilterChain chain;
     @Mock
+    private FilterConfig filterConfig;
+    @Mock
     private User user;
     
     @Before
-    public void setUp() {
+    public void setUp() throws ServletException {
         authFilter = new AuthFilter();
-        
+		authFilter.init(filterConfig);
     }
     
     @Test

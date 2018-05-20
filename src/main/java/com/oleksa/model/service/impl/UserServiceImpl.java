@@ -1,7 +1,5 @@
 package com.oleksa.model.service.impl;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,9 +43,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateToMaster(User user) throws NotUniqueNameException, NotUniqueEmailException {
+	public User update(User user) throws NotUniqueNameException, NotUniqueEmailException {
+		return updateToMaster(user);
+	}
+
+	private User updateToMaster(User user) throws NotUniqueNameException, NotUniqueEmailException {
 		user.setRole(UserRole.MASTER);
 		return userDao.update(user);
+	}
+
+	@Override
+	public void delete(User user) {
+		userDao.deleteById(user.getId());
 	}
 
 

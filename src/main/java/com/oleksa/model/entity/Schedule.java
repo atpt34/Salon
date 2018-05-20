@@ -2,7 +2,6 @@ package com.oleksa.model.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,9 +17,9 @@ public class Schedule extends AbstractEntity<Integer> {
 			Set<Record> records) {
 		super(id);
 		this.master = master;
-		this.day = day;
-		this.startHour = startHour;
-		this.endHour = endHour;
+		setDay(day);
+		setStartHour(startHour);
+		setEndHour(endHour);
 		this.records = records;
 	}
 
@@ -37,7 +36,7 @@ public class Schedule extends AbstractEntity<Integer> {
 	}
 
 	public void setDay(LocalDate day) {
-		this.day = day;
+		this.day = Objects.requireNonNull(day);
 	}
 	
 	public LocalTime getStartHour() {
@@ -45,7 +44,7 @@ public class Schedule extends AbstractEntity<Integer> {
 	}
 
 	public void setStartHour(LocalTime startHour) {
-		this.startHour = startHour;
+		this.startHour = Objects.requireNonNull(startHour);
 	}
 
 	public LocalTime getEndHour() {
@@ -53,7 +52,7 @@ public class Schedule extends AbstractEntity<Integer> {
 	}
 
 	public void setEndHour(LocalTime endHour) {
-		this.endHour = endHour;
+		this.endHour = Objects.requireNonNull(endHour);
 	}
 
 	public Set<Record> getRecords() {

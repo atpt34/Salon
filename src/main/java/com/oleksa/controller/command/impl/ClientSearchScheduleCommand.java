@@ -4,16 +4,21 @@ import static com.oleksa.controller.constants.MessagesConstants.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.oleksa.controller.command.Command;
 import com.oleksa.controller.validator.ValidatorUtil;
 import com.oleksa.model.entity.Schedule;
+import com.oleksa.model.logger.Loggable;
 import com.oleksa.model.service.ScheduleService;
 
-public class ClientSearchScheduleCommand implements Command {
+public class ClientSearchScheduleCommand implements Command, Loggable {
 
 	private ScheduleService scheduleService;
 
@@ -28,7 +33,9 @@ public class ClientSearchScheduleCommand implements Command {
 		LocalTime time = ValidatorUtil.parseTimeParameter(timeParam);
 		LocalDate date = ValidatorUtil.parseDateParameter(dateParam);
 		List<Schedule> find = scheduleService.findFreeOnDayAndTime(date, time);
-		request.getSession().setAttribute(ATTRIBUTE_SCHEDULES, find);
+		Map<Integer, Schedule> collect = find.stream().collect(Collectors.toMap(Schedule::getId, Function.identity()));
+		getLogger().info(collect);
+		request.getSession().setAttribute(ATTRIBUTE_SCHEDULES, collect);
 		request.setAttribute(PARAM_SCHEDULES, find);
 		request.setAttribute(PARAM_DATE, date);
 		request.setAttribute(PARAM_TIME, time);

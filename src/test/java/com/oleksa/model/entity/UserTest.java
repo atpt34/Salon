@@ -10,11 +10,21 @@ import com.oleksa.model.entity.User.UserBuilder;
 public class UserTest {
 
 	public static final User USER 
-		= new User(null, "oleksii", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
+		= new User(1, "oleksii", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
 	public static final User SAME_USER
-		= new User(null, "oleksii", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
+		= new User(1, "oleksii", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
+	public static final User THIRD_SAME_USER
+		= new User(1, "oleksii", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
+	public static final User USER_NULLS
+		= new User(null, "oleksii", "atpt34@gmail.com", "123456", UserRole.ADMIN, null);
+	public static final User SAME_USER_NULLS
+		= new User(null, "oleksii", "atpt34@gmail.com", "123456", UserRole.ADMIN, null);
+	public static final User THIRD_SAME_USER_NULLS
+	= new User(null, "oleksii", "atpt34@gmail.com", "123456", UserRole.ADMIN, null);
 	public static final User OTHER_USER_ID
-		= new User(1, "oleksa", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
+		= new User(2, "oleksa", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
+	public static final User OTHER_USER_ID2
+		= new User(null, "oleksa", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
 	public static final User OTHER_USER_NAME
 		= new User(null, "oleksa", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa T. V.");
 	public static final User OTHER_USER_EMAIL
@@ -25,8 +35,11 @@ public class UserTest {
 		= new User(null, "oleksa", "atpt34@gmail.com", "123456", UserRole.MASTER, "Oleksa T. V.");
 	public static final User OTHER_USER_FULLNAME
 		= new User(null, "oleksa", "atpt34@gmail.com", "123456", UserRole.ADMIN, "Oleksa O. V.");
+	public static final User OTHER_USER_FULLNAME2
+		= new User(null, "oleksa", "atpt34@gmail.com", "123456", UserRole.ADMIN, null);
 	public static final User OTHER_USER
 		= new User(null, "maxim", "maxim2018@gmail.com", "654321", UserRole.CLIENT, "Maximets N. V.");
+	public static final User NULL_USER = null;
 	
 	@Before
     public void setUp() {
@@ -36,16 +49,19 @@ public class UserTest {
 	@Test
     public void testContract() {
 		assertTrue(USER.equals(SAME_USER) && USER.hashCode() == SAME_USER.hashCode());
+		assertTrue(USER_NULLS.equals(SAME_USER_NULLS) && USER_NULLS.hashCode() == SAME_USER_NULLS.hashCode());
 	}
 	
 	@Test
     public void testNotEqualsOtherUsers() {
         assertFalse(USER.equals(OTHER_USER));
+        assertFalse(USER.equals(USER_NULLS));
     }
 	
 	@Test
     public void testNotEqualsOtherId() {
         assertFalse(USER.equals(OTHER_USER_ID));
+        assertFalse(USER.equals(OTHER_USER_ID2));
     }
 	
 	@Test
@@ -71,10 +87,12 @@ public class UserTest {
 	@Test
     public void testNotEqualsOtherFullname() {
         assertFalse(USER.equals(OTHER_USER_FULLNAME));
+        assertFalse(USER.equals(OTHER_USER_FULLNAME2));
     }
 	
 	@Test
     public void testEqualsNull() {
+		assertFalse(USER.equals(NULL_USER));
 		assertFalse(USER.equals(null));
 		assertFalse(SAME_USER.equals(null));
 		assertFalse(OTHER_USER.equals(null));
@@ -91,6 +109,16 @@ public class UserTest {
 	public void testEqualsSymmetry() {
         assertTrue(USER.equals(SAME_USER));
         assertTrue(SAME_USER.equals(USER));
+    }
+	
+	@Test
+	public void testEqualsTransitivity() {
+        assertTrue(USER.equals(SAME_USER) && SAME_USER.equals(THIRD_SAME_USER) && USER.equals(THIRD_SAME_USER));
+        assertTrue(THIRD_SAME_USER.equals(USER) && THIRD_SAME_USER.equals(SAME_USER) && SAME_USER.equals(USER));
+        assertTrue(USER_NULLS.equals(SAME_USER_NULLS) && SAME_USER_NULLS.equals(THIRD_SAME_USER_NULLS)
+        		&& USER_NULLS.equals(THIRD_SAME_USER_NULLS));
+        assertTrue(THIRD_SAME_USER_NULLS.equals(USER_NULLS) && THIRD_SAME_USER_NULLS.equals(SAME_USER_NULLS)
+        		&& SAME_USER_NULLS.equals(USER_NULLS));
     }
 	
 	@Test

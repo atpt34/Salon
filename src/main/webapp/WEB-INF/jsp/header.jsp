@@ -12,12 +12,26 @@
     </form>
     </div>
     
-    <a href="${pageContext.request.contextPath}/login_page"><fmt:message key="page.login"/></a>
-    | <a href="${pageContext.request.contextPath}/logout"><fmt:message key="page.logout"/></a>
-    | <a href="<c:url value="/register_page"/>"><fmt:message key="page.register"/></a>
-    
-    | <a href="<c:url value="/admin_page"/>"><fmt:message key="page.admin"/></a>
-    | <a href="<c:url value="/client_page"/>"><fmt:message key="page.client"/></a>
-    | <a href="<c:url value="/master_page"/>"><fmt:message key="page.master"/></a>
+    <c:choose>
+    	<c:when test="${sessionScope.user.isPresent()}">
+    		<c:set var="role" value="${sessionScope.user.get().role}"/>
+    		<c:choose>
+    			<c:when test="${ role == 'ADMIN'}">
+					<a href="<c:url value="/admin_page"/>"><fmt:message key="page.admin"/></a>
+    			</c:when> 
+    			<c:when test="${ role == 'CLIENT'}">
+    				<a href="<c:url value="/client_page"/>"><fmt:message key="page.client"/></a>
+    			</c:when>
+    			<c:when test="${ role == 'MASTER'}">
+    				<a href="<c:url value="/master_page"/>"><fmt:message key="page.master"/></a>
+    			</c:when>
+    		</c:choose>
+    		<a href="${pageContext.request.contextPath}/logout"><fmt:message key="page.logout"/></a>
+    	</c:when>
+    	<c:otherwise>
+    		<a href="${pageContext.request.contextPath}/login_page"><fmt:message key="page.login"/></a>
+    		| <a href="<c:url value="/register_page"/>"><fmt:message key="page.register"/></a>
+    	</c:otherwise>
+    </c:choose>
     
 </div>

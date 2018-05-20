@@ -16,5 +16,9 @@ public interface RecordService {
 	
 	List<Record> findAllWithComments();
 	
-	void setComment(Record record);
+	void update(Record record);
+	
+	void delete(Record record);
+	
+	void sendEmail(User user);
 }

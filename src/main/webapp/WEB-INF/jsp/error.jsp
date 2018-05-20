@@ -13,7 +13,7 @@
     <body>
         <h2><fmt:message key="page.error"/></h2>
            <details>
-            <summary><%= exception.getMessage() %>
+            <summary> <c:out value="${exception.getMessage() }"/>
             <fmt:message key="<%= exception.getMessage() %>"/>
              </summary>
             <p> StackTrace:

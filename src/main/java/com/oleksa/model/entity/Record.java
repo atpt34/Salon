@@ -16,8 +16,8 @@ public class Record extends AbstractEntity<Integer> {
 	public Record(Integer id, User client, LocalTime hour, LocalDate day, Comment comment, Set<Schedule> schedules) {
 		super(id);
 		this.client = client;
-		this.hour = hour;
-		this.day = day;
+		setHour(hour);
+		setDay(day);
 		this.comment = comment;
 		this.schedules = schedules;
 	}
@@ -35,7 +35,7 @@ public class Record extends AbstractEntity<Integer> {
 	}
 
 	public void setHour(LocalTime hour) {
-		this.hour = hour;
+		this.hour = Objects.requireNonNull(hour);
 	}
 
 	public LocalDate getDay() {
@@ -43,7 +43,7 @@ public class Record extends AbstractEntity<Integer> {
 	}
 
 	public void setDay(LocalDate day) {
-		this.day = day;
+		this.day = Objects.requireNonNull(day);
 	}
 
 	public Comment getComment() {
@@ -87,7 +87,7 @@ public class Record extends AbstractEntity<Integer> {
 
 	@Override
 	public String toString() {
-		return "Record [client=" + client + ", hour=" + hour + ", day=" + day + ", comment=" + comment /* + ", schedules=" + schedules*/
+		return "Record [id=" + id + ", client=" + client + ", hour=" + hour + ", day=" + day + ", comment=" + comment /* + ", schedules=" + schedules*/
 				+ "]";
 	}
 	

@@ -11,13 +11,13 @@
     <h1><fmt:message key="page.schedules"/></h1>
     <form method="POST">
 	<input type="submit" formaction="${pageContext.request.contextPath}/index" style="visibility: hidden; display: none;">
-	<fmt:message key="recordDate"/>
+	<fmt:message key="date"/>
 	<input type="date" name="date" value="${date }"> |
-	<fmt:message key="recordTime"/>
+	<fmt:message key="time"/>
     <input type="time" name="time" step="3600" value="${time }"/>
      <br/><br/>
 	<c:forEach var="sc" items="${schedules}">
-		<input type="checkbox" name="id" value="${sc.id}" />${sc.id} ${sc}<br/>
+		<input type="checkbox" name="id" value="${sc.id}" />${sc}<br/>
 	</c:forEach>
    	  <br/><br/>
 	<button formaction="${pageContext.request.contextPath}/client/create_record"><fmt:message key="page.create"/></button>

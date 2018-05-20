@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.sql.DataSource;
 
@@ -25,22 +26,22 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
 
     @Override
     public Optional<User> findById(Integer id) {
-        return super.findById(US_SELECT_BY_ID, UserDaoImpl::mapToUser, id);
+        return super.findById(US_SELECT_BY_ID, JdbcMapperImpl::mapToUser, id);
     }
 
     @Override
     public List<User> findAll() {
-        return super.findAll(US_SELECT_ALL, UserDaoImpl::mapToUser);
+        return super.findAll(US_SELECT_ALL, JdbcMapperImpl::mapToUser);
     }
     
     @Override
     public Optional<User> findByName(String name) {
-        return super.findByName(US_SELECT_BY_NAME, UserDaoImpl::mapToUser, name);
+        return super.findByName(US_SELECT_BY_NAME, JdbcMapperImpl::mapToUser, name);
     }
     
     @Override
     public Optional<User> findByEmail(String email) {
-        return super.findByName(US_SELECT_BY_EMAIL, UserDaoImpl::mapToUser, email);
+        return super.findByName(US_SELECT_BY_EMAIL, JdbcMapperImpl::mapToUser, email);
     }
     
     @Override
@@ -107,20 +108,6 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
             if(message.contains(US_EMAIL_UNIQUE)) {
                 throw new NotUniqueEmailException();
             }
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static User mapToUser(ResultSet resultSet) {
-        try {
-            UserRole role = UserRole.valueOf(resultSet.getString(US_ROLE).toUpperCase());
-            String password = resultSet.getString(US_PASSWORD);
-            String name = resultSet.getString(US_NAME);
-            String email = resultSet.getString(US_EMAIL);
-            int id = resultSet.getInt(US_ID);
-            String fullname = resultSet.getString(US_FULL_NAME);
-            return new User(id, name, email, password, role, fullname);
-        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

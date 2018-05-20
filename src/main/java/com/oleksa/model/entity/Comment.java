@@ -9,7 +9,7 @@ public class Comment extends AbstractEntity<Integer> {
 	
 	public Comment(Integer id, String text, int stars) {
 		super(id);
-		this.text = text;
+		setText(text);
 		this.stars = stars;
 	}
 	
@@ -17,7 +17,7 @@ public class Comment extends AbstractEntity<Integer> {
 		return text;
 	}
 	public void setText(String text) {
-		this.text = text;
+		this.text = Objects.requireNonNull(text);
 	}
 	public int getStars() {
 		return stars;

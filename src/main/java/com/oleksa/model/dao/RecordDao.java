@@ -9,6 +9,8 @@ import com.oleksa.model.exception.RecordOccupiedException;
 public interface RecordDao extends CrudDao<Record, Integer> {
 
 	List<Record> findAllByClientId(int clientId);
+	
+	List<Record> findAllByClientIdWithMaster(int clientId);
 
 	@Override
 	Record create(Record t) throws RecordOccupiedException;

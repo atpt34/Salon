@@ -16,6 +16,8 @@ public interface UserService {
 
 	List<User> findAll();
 	
-	User updateToMaster(User user) throws NotUniqueNameException, NotUniqueEmailException;
+	User update(User user) throws NotUniqueNameException, NotUniqueEmailException;
+
+	void delete(User user);
     
 }

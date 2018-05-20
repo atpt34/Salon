@@ -1,5 +1,6 @@
 package com.oleksa.model.pagination;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -18,6 +19,10 @@ public class PaginationResult<T> {
 		this.total = total;
 		this.page = page;
 		this.totalPages = total / itemsOnPage + ((total % itemsOnPage == 0) ? 0 : 1);
+	}
+	
+	public List<T> getSortedItems(Comparator<? super T> comparator) {
+		return items.stream().sorted(comparator).collect(Collectors.toList());
 	}
 	
 	public <U> Map<U, List<T>> getGroupedItems(Function<T, U> classifier) {

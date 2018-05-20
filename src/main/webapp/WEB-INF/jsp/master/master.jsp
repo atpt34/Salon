@@ -6,6 +6,8 @@
 <body>
     <jsp:include page="../header.jsp" />
     
+    <jsp:include page="../error_tag.jsp" />
+    
     <h1><fmt:message key="hello"/><fmt:message key="master"/> ${sessionScope.user.get().fullname}</h1>
     
     <p> <a href="${pageContext.request.contextPath}/master/schedules" ><fmt:message key="page.schedules"/></a> </p>

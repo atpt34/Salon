@@ -19,9 +19,7 @@ public abstract class JdbcTemplate<T> implements Loggable {
 
     DataSource dataSource;
     
-    JdbcTemplate() {
-        
-    }
+    private JdbcTemplate() {}
     
     JdbcTemplate(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -38,8 +36,8 @@ public abstract class JdbcTemplate<T> implements Loggable {
     List<T> findAll(String sql, Function<ResultSet, T> mapToType) {
         List<T> result = new ArrayList<>();
         try(Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery();
                 ) {
             while(resultSet.next()) {
                 T t = mapToType.apply(resultSet);

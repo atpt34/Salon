@@ -2,6 +2,7 @@ package com.oleksa.controller.validator;
 
 import static org.junit.Assert.*;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.stream.IntStream;
@@ -27,7 +28,7 @@ public class ValidatorUtilTest {
 	
 	@Test
 	public void testParseValidFullnameUkr() {
-		Stream.of(null, "" , "Єґер" , "Полюй", "Дудак Вася", "Лариса Л.", "Треть’як Богдан Г.")
+		Stream.of(null, "" , "Єґер" , "Полюй", "Дудак Вася", "Лариса Л.", "Треть’як Богдан Г.", "Лариса Kiss")
 		.forEach(p -> assertFalse(ValidatorUtil.validFullname(p)));
 		
 		Stream.of("Іванов І.І.", "Петро Геннадій Дмитрович")
@@ -95,7 +96,7 @@ public class ValidatorUtilTest {
 	public void testParseValidDate() {
 		Stream.of(null, "", "name", "/", "//", "///", "0/0/0", "0/01/2018", "01/0/2018", "00/01/2018", "01/00/2018", "01/01/200", "1/1/2018", "32/01/2018", "31/13/2018", "01/01/2017", "01/01/2020")
 		.forEach(p -> { /*System.out.println(p); */assertFalse(ValidatorUtil.validDate(p)); });
-		Stream.of("01/01/2018", "12/01/2018", "31/01/2018", "01/12/2019", "31/12/2019", "29/09/2019")
+		Stream.of("01/01/2018", "12/01/2018", "31/01/2018", "01/12/2019", "31/12/2019", "29/09/2019", "31/02/2019")
 		.forEach(p -> assertTrue(ValidatorUtil.validDate(p)));
 	}
 	
@@ -103,8 +104,19 @@ public class ValidatorUtilTest {
 	public void testParseDateParam() {
 		Stream.of(null, "", "name", "/", "//", "///", "0/0/0", "0/01/2018", "01/0/2018", "00/01/2018", "01/00/2018", "01/01/200", "1/1/2018", "32/01/2018", "31/13/2018", "01/01/2017", "01/01/2020")
 		.forEach(p -> { /*System.out.println(p); */assertEquals(LocalDate.now(), ValidatorUtil.parseDateParameter(p)); });
-//		Stream.of("01/01/2018", "12/01/2018", "31/01/2018", "01/12/2019", "31/12/2019", "29/09/2019")
-//		.forEach(p -> assertTrue(ValidatorUtil.validDate(p)));
-		assertEquals(LocalDate.of(2018, 1, 1), ValidatorUtil.parseDateParameter("2018-01-01"));
+		Stream.of("2018-01-01", "2018-01-31", "2018-12-31", "2019-01-31", "2019-12-31")
+		.forEach(p -> {
+			String[] split = p.split("-");
+			int year = Integer.parseInt(split[0]);
+			int month = Integer.parseInt(split[1]);
+			int day = Integer.parseInt(split[2]);
+			assertEquals(LocalDate.of(year, month, day), ValidatorUtil.parseDateParameter(p));
+		});
+	}
+	
+	@Test(expected = DateTimeException.class)
+	public void testBadDate() {
+		LocalDate parameter = ValidatorUtil.parseDateParameter("2019-02-31");
+		fail();
 	}
 }

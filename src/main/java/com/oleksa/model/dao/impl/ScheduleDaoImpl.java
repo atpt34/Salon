@@ -58,31 +58,41 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 	}
 
 	@Override
-	public void deleteById(Integer i) {
-		// TODO Auto-generated method stub
-
+	public void deleteById(Integer id) {
+		super.deleteById(SC_DELETE_BY_ID, id);
 	}
 
+	private static void prepareUpdate(Schedule t, PreparedStatement statement) {
+		try {
+			statement.setInt(1, t.getMaster().getId());
+			statement.setDate(2, Date.valueOf(t.getDay()));
+			statement.setTime(3, Time.valueOf(t.getStartHour()));
+			statement.setTime(4, Time.valueOf(t.getEndHour()));
+			statement.setInt(5, t.getId());
+		} catch (SQLException e) {
+			LOGGER.error(e);
+		}
+	}
+	
 	@Override
 	public Schedule update(Schedule t) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		super.update(t, SC_UPDATE, ScheduleDaoImpl::prepareUpdate);
+		return t;
 	}
 
 	@Override
 	public Optional<Schedule> findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return super.findById(SC_SELECT_BY_ID, JdbcMapperImpl::mapToSchedule, id);
 	}
 
 	@Override
 	public List<Schedule> findAll() {
-		return super.findAll(SC_SELECT_ALL, ScheduleDaoImpl::mapToScheduleWithUser);
+		return super.findAll(SC_SELECT_ALL, JdbcMapperImpl::mapToScheduleWithUser);
 	}
 
 	@Override
 	public List<Schedule> findAllByMasterId(int masterId) {
-		return super.findAllByForeignKey(SC_SELECT_BY_MASTER, masterId, ScheduleDaoImpl::mapToSchedule);
+		return super.findAllByForeignKey(SC_SELECT_BY_MASTER, masterId, JdbcMapperImpl::mapToSchedule);
 	}
 
 	@Override
@@ -95,21 +105,15 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
     		try(ResultSet resultSet = statement.executeQuery();) {
     			Map<Integer, Record> records = new HashMap<>();
     			while(resultSet.next()) {
-    	            int id = resultSet.getInt(SC_ID);
-    	            LocalDate day = resultSet.getDate(SC_DAY).toLocalDate();
-    				LocalTime startHour = resultSet.getTime(SC_START_TIME).toLocalTime();
-    				LocalTime endHour = resultSet.getTime(SC_END_TIME).toLocalTime();
-    				int recordId = resultSet.getInt(RC_ID);
-    				LocalTime hour = resultSet.getTime(RC_HOUR).toLocalTime();
-    				LocalDate recordDay = resultSet.getDate(RC_DAY).toLocalDate();
-    				Record record = new Record(recordId, null, hour, recordDay, null, null);
-    				records.putIfAbsent(recordId, record);
-					Schedule schedule = new Schedule(id, null, day, startHour, endHour, null);
+    				Schedule schedule = JdbcMapperImpl.mapToSchedule(resultSet);
+    				Record record = JdbcMapperImpl.mapToRecord(resultSet);
+    				int recordId = record.getId();
+					records.putIfAbsent(recordId, record);
 					result.putIfAbsent(schedule, new HashSet<>());
 					result.get(schedule).add(records.get(recordId));
                 }
             }
-    		getLogger().info(result);
+    		getLogger().debug(result);
     		result.forEach((k, v) -> k.setRecords(v));
 			return new ArrayList<>(result.keySet());
 		} catch (SQLException e) {
@@ -140,7 +144,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
     				statement.setInt(2, offset);
             		try(ResultSet resultSet = statement.executeQuery();) {
             			while(resultSet.next()) {
-                            items.add(mapToScheduleWithUser(resultSet));
+                            items.add(JdbcMapperImpl.mapToScheduleWithUser(resultSet));
                         }
                     }
         		}
@@ -163,7 +167,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 			statement.setTime(3, Time.valueOf(time));
     		try(ResultSet resultSet = statement.executeQuery();) {
     			while(resultSet.next()) {
-                    result.add(mapToScheduleWithUser(resultSet));
+                    result.add(JdbcMapperImpl.mapToScheduleWithUser(resultSet));
                 }
             }
 		} catch (SQLException e) {
@@ -174,38 +178,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 		return result;
 	}
 	
-	private static Schedule mapToSchedule(ResultSet resultSet) {
-		try {
-            int id = resultSet.getInt(SC_ID);
-            LocalDate day = resultSet.getDate(SC_DAY).toLocalDate();
-			LocalTime startHour = resultSet.getTime(SC_START_TIME).toLocalTime();
-			LocalTime endHour = resultSet.getTime(SC_END_TIME).toLocalTime();
-			User master = null;
-			return new Schedule(id, master, day, startHour, endHour, null);
-        } catch (SQLException e) {
-        	LOGGER.error(e);
-            throw new RuntimeException(e);
-        }
-	}
 
-	private static Schedule mapToScheduleWithUser(ResultSet resultSet) {
-        try {
-            UserRole role = UserRole.valueOf(resultSet.getString(US_ROLE).toUpperCase());
-            String password = resultSet.getString(US_PASSWORD);
-            String name = resultSet.getString(US_NAME);
-            String email = resultSet.getString(US_EMAIL);
-            int masterId = resultSet.getInt(US_ID);
-            String fullname = resultSet.getString(US_FULL_NAME);
-            int id = resultSet.getInt(SC_ID);
-            LocalDate day = resultSet.getDate(SC_DAY).toLocalDate();
-			LocalTime startHour = resultSet.getTime(SC_START_TIME).toLocalTime();
-			LocalTime endHour = resultSet.getTime(SC_END_TIME).toLocalTime();
-			User master = new User(masterId, name, email, password, role, fullname); // TODO: duplicate users
-			return new Schedule(id, master, day, startHour, endHour, null);
-        } catch (SQLException e) {
-        	LOGGER.error(e);
-            throw new RuntimeException(e);
-        }
-    }
+
 
 }

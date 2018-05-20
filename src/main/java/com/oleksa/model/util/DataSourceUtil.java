@@ -31,6 +31,8 @@ public class DataSourceUtil {
         }
     }
     
+    private DataSourceUtil() { } 
+    
     public static DataSource getDataSource() {
         return dataSource;
     }

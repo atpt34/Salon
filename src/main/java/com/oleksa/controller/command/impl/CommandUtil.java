@@ -38,6 +38,9 @@ public final class CommandUtil {
         if (user.isPresent()) {
             getLoggedUsers(request).remove(user.get().getName());
             session.setAttribute(PARAM_USER, Optional.empty());
+            session.removeAttribute(ATTRIBUTE_RECORDS);
+            session.removeAttribute(ATTRIBUTE_SCHEDULES);
+            session.removeAttribute(ATTRIBUTE_USERS);
             LOGGER.info("logout user: " + user.get());
             LOGGER.info("logged users: " + getLoggedUsers(request));
         }

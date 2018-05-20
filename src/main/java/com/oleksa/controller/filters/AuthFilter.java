@@ -30,9 +30,13 @@ import static com.oleksa.controller.constants.MessagesConstants.*;
 
 public final class AuthFilter implements Filter, Loggable {
 
+	private static final Map<String, UserRole> MAP = new HashMap<>();
+	
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        
+    	MAP.put(FOLDER_ADMIN, UserRole.ADMIN);
+        MAP.put(FOLDER_CLIENT, UserRole.CLIENT);
+        MAP.put(FOLDER_MASTER, UserRole.MASTER);
     }
 
     @SuppressWarnings("unchecked")
@@ -44,21 +48,11 @@ public final class AuthFilter implements Filter, Loggable {
         String path = req.getRequestURI();
         getLogger().info("path: " + path);
         Optional<User> user = (Optional<User>) session.getAttribute(PARAM_USER);
-        PathToRoleMapper.map
-	      .forEach((k, v) -> { 
+        MAP.forEach((k, v) -> { 
 	    	  if (path.contains(k) && (!user.isPresent() || user.get().getRole() != v))
 	    		  throw new AccessDeniedException(MSG_ACCESS_DENIED); 
 	    	  } );
         chain.doFilter(request,response);
-    }
-    
-    private static class PathToRoleMapper {
-        static Map<String, UserRole> map = new HashMap<>();
-        static {
-            map.put(FOLDER_ADMIN, UserRole.ADMIN);
-            map.put(FOLDER_CLIENT, UserRole.CLIENT);
-            map.put(FOLDER_MASTER, UserRole.MASTER);
-        }
     }
 
     @Override

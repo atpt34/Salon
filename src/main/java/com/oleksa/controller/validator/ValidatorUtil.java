@@ -9,45 +9,47 @@ import java.util.Objects;
 import com.oleksa.controller.exception.UnparsableIdException;
 
 public class ValidatorUtil {
+	
+	private ValidatorUtil() {}
 
     public static boolean isValidName(String name) {
-        return Objects.nonNull(name) && name.matches(RE_NAME);
+        return Objects.nonNull(name) && name.matches(RE_NAME.getRegex());
     }
     
     public static boolean validPassword(String pass) {
-        return pass != null && pass.matches(RE_PASSWORD);
+        return pass != null && pass.matches(RE_PASSWORD.getRegex());
     }
     
     public static boolean validEmail(String email) {
-        return email != null && email.matches(RE_EMAIL);
+        return email != null && email.matches(RE_EMAIL.getRegex());
     }
     
     public static boolean validFullname(String full) {
-        return full != null && full.matches(RE_FULLNAME);
+        return full != null && full.matches(RE_FULLNAME.getRegex());
     }
 
     public static boolean validPage(String page) {
-        return page != null && page.matches(RE_PAGE);
+        return page != null && page.matches(RE_PAGE.getRegex());
     }
     
 	public static boolean validDate(String date) {
-        return date != null && date.matches(RE_DATE);
+        return date != null && date.matches(RE_DATE.getRegex());
     }
 	
 	public static boolean validTime(String time) {
-        return time != null && time.matches(RE_TIME);
+        return time != null && time.matches(RE_TIME.getRegex());
     }
     
 	public static boolean validId(String id) {
-        return id != null && id.matches(RE_ID);
+        return id != null && id.matches(RE_ID.getRegex());
     }
 	
 	public static boolean validText(String text) {
-        return text != null && text.matches(RE_TEXT);
+        return text != null && text.matches(RE_TEXT.getRegex());
     }
 	
 	public static boolean validStars(String stars) {
-        return stars != null && stars.matches(RE_STARS);
+        return stars != null && stars.matches(RE_STARS.getRegex());
     }
 	
 	public static int parsePageParameter(String pageParam) {

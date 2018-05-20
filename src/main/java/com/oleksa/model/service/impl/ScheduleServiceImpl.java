@@ -49,4 +49,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 		return scheduleDao.findFreeOnDayAndTime(day, time);
 	}
 
+	@Override
+	public void delete(Schedule schedule) {
+		scheduleDao.deleteById(schedule.getId());
+	}
+
 }

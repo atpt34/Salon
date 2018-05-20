@@ -12,7 +12,7 @@
     </Appender>
     <Appender type="File" name="File" fileName="${filename}">
       <Layout type="PatternLayout">
-        <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+        <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} %M - %msg%n</Pattern>
       </Layout>
     </Appender>
   </Appenders>
