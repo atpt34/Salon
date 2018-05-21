@@ -2,8 +2,6 @@ package com.oleksa.controller.command.impl;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -59,7 +57,8 @@ public class ClientCommentCommand implements Command, Loggable {
 		Record record = first.get();
 		record.setComment(comment);
 		recordService.update(record);
-		return SERVERPAGE_CLIENT_RECORDS;
+		request.getSession().removeAttribute(ATTRIBUTE_RECORDS);
+		return PAGE_REDIRECT + PAGE_CLIENT;
 	}
 
 }

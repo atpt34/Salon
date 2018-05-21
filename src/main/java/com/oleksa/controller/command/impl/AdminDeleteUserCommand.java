@@ -23,6 +23,7 @@ public class AdminDeleteUserCommand implements Command, Loggable {
 		this.userService = userService;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
 		List<User> found = (List<User>) request.getSession().getAttribute(ATTRIBUTE_USERS);
@@ -47,7 +48,7 @@ public class AdminDeleteUserCommand implements Command, Loggable {
 			request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
 			return PARENT_DIR + SERVERPAGE_ADMIN;
 		}
-		return PARENT_DIR + SERVERPAGE_ADMIN;
+		return PAGE_REDIRECT + PAGE_ADMIN;
 	}
 
 }

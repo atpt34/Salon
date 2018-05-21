@@ -10,9 +10,9 @@
     
     <h1><fmt:message key="page.login"/></h1>
     <form method="post" action="${pageContext.request.contextPath}/login">
-        <fmt:message key="name"/><input type="text" name="name"><br/>
-        <fmt:message key="pass"/><input type="password" name="pass"><br/><br/>
-       <input class="button" type="submit" value="<fmt:message key="page.login"/>">
+        <fmt:message key="name"/><input type="text" name="name"/><br/>
+        <fmt:message key="pass"/><input type="password" name="pass"/><br/><br/>
+       <input class="button" type="submit" value="<fmt:message key="page.login"/>"/>
     </form>
     
     <jsp:include page="footer.jsp" />

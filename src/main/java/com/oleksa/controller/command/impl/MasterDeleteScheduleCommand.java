@@ -44,7 +44,7 @@ public class MasterDeleteScheduleCommand implements Command, Loggable {
 		} catch (UnparsableIdException e) {
 			getLogger().error(MSG_NO_PREV_SEARCH);
 		}
-		return PARENT_DIR + SERVERPAGE_MASTER_SCHEDULES;
+		return PAGE_REDIRECT + PAGE_MASTER;
 	}
 
 }

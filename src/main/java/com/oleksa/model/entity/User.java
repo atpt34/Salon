@@ -2,7 +2,7 @@ package com.oleksa.model.entity;
 
 import java.util.Objects;
 
-public class User extends AbstractEntity<Integer> {
+public final class User extends AbstractEntity<Integer> {
 
     private String name;
     private String password;
@@ -68,8 +68,6 @@ public class User extends AbstractEntity<Integer> {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
-            return false;
         if (!(obj instanceof User))
             return false;
         User other = (User) obj;
@@ -77,8 +75,8 @@ public class User extends AbstractEntity<Integer> {
         		&& Objects.equals(name, other.name)
         		&& Objects.equals(email, other.email)
         		&& Objects.equals(password, other.password)
-        		&& Objects.equals(role, other.role)
-        		&& Objects.equals(fullname, other.fullname);
+        		&& Objects.equals(fullname, other.fullname)
+        		&& role == other.role;
     }
 
     @Override

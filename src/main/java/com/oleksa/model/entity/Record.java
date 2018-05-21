@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Set;
 
-public class Record extends AbstractEntity<Integer> {
+public final class Record extends AbstractEntity<Integer> {
 
 	private User client;
 	private LocalTime hour;

@@ -37,8 +37,6 @@ public final class LoginCommand implements Command {
             request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
             return PAGE_LOGIN;
         }
-        System.out.println(name + " " + pass);
- 
         try {
             User user = service.findUserByCredentials(name, pass);
             if (!CommandUtil.setLoggedUser(request, user)) {

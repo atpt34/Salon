@@ -13,7 +13,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.oleksa.controller.command.Command;
+import com.oleksa.controller.exception.UnparsableDateParameter;
 import com.oleksa.controller.exception.UnparsableIdException;
+import com.oleksa.controller.exception.UnparsableTimeParameter;
 import com.oleksa.controller.validator.ValidatorUtil;
 import com.oleksa.model.entity.Record;
 import com.oleksa.model.entity.Schedule;
@@ -33,11 +35,20 @@ public class ClientCreateRecordCommand implements Command, Loggable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
-		Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
 		String timeParam = request.getParameter(PARAM_TIME);
 		String dateParam = request.getParameter(PARAM_DATE);
-		LocalTime time = ValidatorUtil.parseTimeParameter(timeParam);
-		LocalDate date = ValidatorUtil.parseDateParameter(dateParam);
+		LocalTime time = null;
+		LocalDate date = null;
+		try {
+			time = ValidatorUtil.parseTimeParameter(timeParam);
+			date = ValidatorUtil.parseDateParameter(dateParam);
+		} catch (UnparsableTimeParameter | UnparsableDateParameter e) {
+			getLogger().error(e);
+			request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
+			request.setAttribute(PARAM_DATE, LocalDate.now());
+			request.setAttribute(PARAM_TIME, LocalTime.NOON);
+			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
+		} 
 		String[] ids = request.getParameterValues(PARAM_ID);
 		Map<Integer, Schedule> found = (Map<Integer, Schedule>) request.getSession().getAttribute(ATTRIBUTE_SCHEDULES);
 		if(Objects.isNull(ids) || (ids.length == 0) || Objects.isNull(found) || found.isEmpty()) {
@@ -68,6 +79,7 @@ public class ClientCreateRecordCommand implements Command, Loggable {
 			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
 		}
 		getLogger().debug(schedules);
+		Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
 		Record record = new Record(null, client.get(), time, date, null, schedules);
 		try {
 			recordService.create(record);
@@ -79,7 +91,7 @@ public class ClientCreateRecordCommand implements Command, Loggable {
 			request.setAttribute(PARAM_TIME, time);
 			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
 		}
-		return PARENT_DIR + SERVERPAGE_CLIENT;
+		return PAGE_REDIRECT + PAGE_CLIENT;
 	}
 
 }

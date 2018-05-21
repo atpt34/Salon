@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import com.oleksa.controller.command.Command;
+import com.oleksa.controller.exception.UnparsableDateParameter;
+import com.oleksa.controller.exception.UnparsableTimeParameter;
 import com.oleksa.controller.validator.ValidatorUtil;
 import com.oleksa.model.entity.Schedule;
 import com.oleksa.model.logger.Loggable;
@@ -30,8 +32,18 @@ public class ClientSearchScheduleCommand implements Command, Loggable {
 	public String execute(HttpServletRequest request) {
 		String timeParam = request.getParameter(PARAM_TIME);
 		String dateParam = request.getParameter(PARAM_DATE);
-		LocalTime time = ValidatorUtil.parseTimeParameter(timeParam);
-		LocalDate date = ValidatorUtil.parseDateParameter(dateParam);
+		LocalTime time = null;
+		LocalDate date = null;
+		try {
+			time = ValidatorUtil.parseTimeParameter(timeParam);
+			date = ValidatorUtil.parseDateParameter(dateParam);
+		} catch (UnparsableTimeParameter | UnparsableDateParameter e) {
+			getLogger().error(e);
+			request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
+			request.setAttribute(PARAM_DATE, LocalDate.now());
+			request.setAttribute(PARAM_TIME, LocalTime.NOON);
+			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
+		} 
 		List<Schedule> find = scheduleService.findFreeOnDayAndTime(date, time);
 		Map<Integer, Schedule> collect = find.stream().collect(Collectors.toMap(Schedule::getId, Function.identity()));
 		getLogger().info(collect);

@@ -2,21 +2,19 @@ package com.oleksa.model.dao.impl;
 
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 import javax.sql.DataSource;
 
 import com.oleksa.model.dao.UserDao;
 import com.oleksa.model.entity.User;
-import com.oleksa.model.entity.UserRole;
 import com.oleksa.model.exception.NotUniqueNameException;
 import com.oleksa.model.exception.NotUniqueEmailException;
-import static com.oleksa.model.dao.impl.JdbcConstants.*;
+
+import static com.oleksa.model.dao.impl.DatabaseProperties.*;
 
 public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
 
@@ -26,27 +24,27 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
 
     @Override
     public Optional<User> findById(Integer id) {
-        return super.findById(US_SELECT_BY_ID, JdbcMapperImpl::mapToUser, id);
+        return super.findById(US_SELECT_BY_ID.getValue(), JdbcMapperImpl::mapToUser, id);
     }
 
     @Override
     public List<User> findAll() {
-        return super.findAll(US_SELECT_ALL, JdbcMapperImpl::mapToUser);
+        return super.findAll(US_SELECT_ALL.getValue(), JdbcMapperImpl::mapToUser);
     }
     
     @Override
     public Optional<User> findByName(String name) {
-        return super.findByName(US_SELECT_BY_NAME, JdbcMapperImpl::mapToUser, name);
+        return super.findByName(US_SELECT_BY_NAME.getValue(), JdbcMapperImpl::mapToUser, name);
     }
     
     @Override
     public Optional<User> findByEmail(String email) {
-        return super.findByName(US_SELECT_BY_EMAIL, JdbcMapperImpl::mapToUser, email);
+        return super.findByName(US_SELECT_BY_EMAIL.getValue(), JdbcMapperImpl::mapToUser, email);
     }
     
     @Override
     public void deleteById(Integer id) {
-        super.deleteById(US_DELETE_BY_ID, id);
+        super.deleteById(US_DELETE_BY_ID.getValue(), id);
     }
     
     private static void prepareInsert(User t, PreparedStatement statement) {
@@ -65,16 +63,16 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
     public User create(User u) throws NotUniqueNameException, NotUniqueEmailException {
         int id = u.getId();
         try {
-            id = super.create(u, US_INSERT, UserDaoImpl::prepareInsert);
+            id = super.create(u, US_INSERT.getValue(), UserDaoImpl::prepareInsert);
             u.setId(id);
             return u;
         } catch (SQLException e) {
         	getLogger().error(e);
             String message = e.getMessage();
-            if(message.contains(US_NAME_UNIQUE)) {
+            if(message.contains(US_NAME_UNIQUE.getValue())) {
                 throw new NotUniqueNameException();
             }
-            if(message.contains(US_EMAIL_UNIQUE)) {
+            if(message.contains(US_EMAIL_UNIQUE.getValue())) {
                 throw new NotUniqueEmailException();
             }
             throw new RuntimeException(e);
@@ -97,15 +95,15 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
     @Override
     public User update(User u) throws NotUniqueNameException, NotUniqueEmailException {
         try {
-            super.update(u, US_UPDATE, UserDaoImpl::prepareUpdate);
+            super.update(u, US_UPDATE.getValue(), UserDaoImpl::prepareUpdate);
             return u;
         } catch (SQLException e) {
         	getLogger().error(e);
             String message = e.getMessage();
-            if(message.contains(US_NAME_UNIQUE)) {
+            if(message.contains(US_NAME_UNIQUE.getValue())) {
                 throw new NotUniqueNameException();
             }
-            if(message.contains(US_EMAIL_UNIQUE)) {
+            if(message.contains(US_EMAIL_UNIQUE.getValue())) {
                 throw new NotUniqueEmailException();
             }
             throw new RuntimeException(e);

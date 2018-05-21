@@ -9,12 +9,15 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import com.oleksa.controller.command.Command;
+import com.oleksa.controller.exception.UnparsableDateParameter;
+import com.oleksa.controller.exception.UnparsableTimeParameter;
 import com.oleksa.controller.validator.ValidatorUtil;
 import com.oleksa.model.entity.Schedule;
 import com.oleksa.model.entity.User;
+import com.oleksa.model.logger.Loggable;
 import com.oleksa.model.service.ScheduleService;
 
-public class MasterCreateScheduleCommand implements Command {
+public class MasterCreateScheduleCommand implements Command, Loggable {
 
 	private ScheduleService scheduleService;
 
@@ -25,16 +28,37 @@ public class MasterCreateScheduleCommand implements Command {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
-		String dateParam = request.getParameter(PARAM_DATE);
-		LocalDate day = ValidatorUtil.parseDateParameter(dateParam);
-		String startTimeParam = request.getParameter(PARAM_START_TIME);
-		LocalTime startHour = ValidatorUtil.parseTimeParameter(startTimeParam);
-		String finishTimeParam = request.getParameter(PARAM_FINISH_TIME);
-		LocalTime endHour = ValidatorUtil.parseTimeParameter(finishTimeParam);
+		LocalDate day = null;
+		try {
+			String dateParam = request.getParameter(PARAM_DATE);
+			day = ValidatorUtil.parseDateParameter(dateParam);
+		} catch (UnparsableDateParameter e) {
+			getLogger().error(e);
+			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
+			return SERVERPAGE_MASTER;
+		}
+		LocalTime startHour = null;
+		try {
+			String startTimeParam = request.getParameter(PARAM_START_TIME);
+			startHour = ValidatorUtil.parseTimeParameter(startTimeParam);
+		} catch (UnparsableTimeParameter e) {
+			getLogger().error(e);
+			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
+			return SERVERPAGE_MASTER;
+		}
+		LocalTime endHour = null;
+		try {
+			String finishTimeParam = request.getParameter(PARAM_FINISH_TIME);
+			endHour = ValidatorUtil.parseTimeParameter(finishTimeParam);
+		} catch (UnparsableTimeParameter e) {
+			getLogger().error(e);
+			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
+			return SERVERPAGE_MASTER;
+		}
 		Optional<User> master = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
 		Schedule schedule = new Schedule(null, master.get(), day, startHour, endHour, null);
 		scheduleService.create(schedule);
-		return SERVERPAGE_MASTER_SCHEDULES;
+		return PAGE_REDIRECT + PAGE_MASTER;
 	}
 
 }

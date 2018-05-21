@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Set;
 
-public class Schedule extends AbstractEntity<Integer> {
+public final class Schedule extends AbstractEntity<Integer> {
 
 	private User master;
 	private LocalDate day;

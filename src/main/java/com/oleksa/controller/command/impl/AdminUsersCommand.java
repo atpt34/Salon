@@ -21,10 +21,10 @@ public class AdminUsersCommand implements Command {
 	@Override
 	public String execute(HttpServletRequest request) {
 		System.out.println("admin users command");
-		List<User> findAll = service.findAll();
-		System.out.println(findAll);
-		request.getSession().setAttribute(ATTRIBUTE_USERS, findAll);
-		request.setAttribute(PARAM_USERS, findAll);
+		List<User> find = service.findAll();
+		System.out.println(find);
+		request.getSession().setAttribute(ATTRIBUTE_USERS, find);
+		request.setAttribute(PARAM_USERS, find);
 		return SERVERPAGE_ADMIN_USERS;
 	}
 

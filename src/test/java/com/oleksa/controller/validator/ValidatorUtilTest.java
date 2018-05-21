@@ -10,7 +10,9 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
+import com.oleksa.controller.exception.UnparsableDateParameter;
 import com.oleksa.controller.exception.UnparsableIdException;
+import com.oleksa.controller.exception.UnparsableTimeParameter;
 
 public class ValidatorUtilTest {
 
@@ -82,14 +84,30 @@ public class ValidatorUtilTest {
 	}
 	
 	@Test
-	public void testParseTimeParam() {
+	public void testParseTimeParamUnparsable() {
 		Stream.of(null, "", "name", ":", "000:0", "000:00", "00:000", "00:0", "000:000", "0:0", "00:0", "0:00", ":00", "00:", "24:00", "34:00", "00:61", "23:70")
-		.forEach(p -> assertEquals(LocalTime.NOON, ValidatorUtil.parseTimeParameter(p)));
+		.forEach(p -> {
+			try {
+				ValidatorUtil.parseTimeParameter(p);
+				fail();
+			} catch (UnparsableTimeParameter e) {
+				assertNotNull(e);
+			}
+		});
+		
+	}
+	
+	@Test
+	public void testParseTimeParamParsable() {
 		Stream.of("00:00", "23:59", "10:30", "19:00", "00:59", "09:45", "14:09", "01:50", "23:50")
 		.forEach(p -> { String[] split = p.split(":"); 
 						int hour = Integer.parseInt(split[0]);
 						int minute = Integer.parseInt(split[1]);
-		assertEquals(LocalTime.of(hour, minute), ValidatorUtil.parseTimeParameter(p)); });
+		try {
+			assertEquals(LocalTime.of(hour, minute), ValidatorUtil.parseTimeParameter(p));
+		} catch (UnparsableTimeParameter e) {
+			fail();
+		} });
 	}
 	
 	@Test
@@ -101,21 +119,38 @@ public class ValidatorUtilTest {
 	}
 	
 	@Test
-	public void testParseDateParam() {
-		Stream.of(null, "", "name", "/", "//", "///", "0/0/0", "0/01/2018", "01/0/2018", "00/01/2018", "01/00/2018", "01/01/200", "1/1/2018", "32/01/2018", "31/13/2018", "01/01/2017", "01/01/2020")
-		.forEach(p -> { /*System.out.println(p); */assertEquals(LocalDate.now(), ValidatorUtil.parseDateParameter(p)); });
+	public void testParseDateParamParsable() {
 		Stream.of("2018-01-01", "2018-01-31", "2018-12-31", "2019-01-31", "2019-12-31")
 		.forEach(p -> {
 			String[] split = p.split("-");
 			int year = Integer.parseInt(split[0]);
 			int month = Integer.parseInt(split[1]);
 			int day = Integer.parseInt(split[2]);
-			assertEquals(LocalDate.of(year, month, day), ValidatorUtil.parseDateParameter(p));
+			try {
+				assertEquals(LocalDate.of(year, month, day), ValidatorUtil.parseDateParameter(p));
+			} catch (UnparsableDateParameter e) {
+				fail();
+			}
 		});
 	}
 	
-	@Test(expected = DateTimeException.class)
-	public void testBadDate() {
+	@Test
+	public void testParseDateParamUnparsable() {
+		Stream.of(null, "", "name", "/", "//", "///", "0/0/0", "0/01/2018", "01/0/2018",
+				"00/01/2018", "01/00/2018", "01/01/200", "1/1/2018", "32/01/2018", "31/13/2018",
+				"01/01/2017", "01/01/2020", "2019-02-31")
+		.forEach(p -> {
+			try {
+				ValidatorUtil.parseDateParameter(p);
+				fail();
+			} catch (UnparsableDateParameter e) {
+				assertNotNull(e);
+			}
+		});
+	}
+	
+	@Test(expected = UnparsableDateParameter.class)
+	public void testBadDate() throws UnparsableDateParameter {
 		LocalDate parameter = ValidatorUtil.parseDateParameter("2019-02-31");
 		fail();
 	}

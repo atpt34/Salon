@@ -85,7 +85,6 @@ public final class SalonServlet extends HttpServlet {
         commands.put(PAGE_REGISTER, r -> SERVERPAGE_REGISTER);
         commands.put(PAGE_ADMIN, r -> SERVERPAGE_ADMIN);
         commands.put(PAGE_CLIENT, r -> SERVERPAGE_CLIENT);
-        commands.put(PAGE_CLIENT_CREATE_COMMENT, r -> SERVERPAGE_CLIENT_CREATE_COMMENT);
         commands.put(PAGE_CLIENT_SEARCH_SCHEDULE, r -> SERVERPAGE_CLIENT_SEARCH_SCHEDULE);
         commands.put(PAGE_MASTER, r -> SERVERPAGE_MASTER);
         commands.put(PAGE_MASTER_CREATE_SCHEDULE, r -> SERVERPAGE_MASTER_CREATE_SCHEDULE);

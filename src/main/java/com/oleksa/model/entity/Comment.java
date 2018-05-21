@@ -2,7 +2,7 @@ package com.oleksa.model.entity;
 
 import java.util.Objects;
 
-public class Comment extends AbstractEntity<Integer> {
+public final class Comment extends AbstractEntity<Integer> {
 
 	private String text;
 	private int stars;

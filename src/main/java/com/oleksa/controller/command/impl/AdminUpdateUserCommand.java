@@ -34,13 +34,13 @@ public class AdminUpdateUserCommand implements Command, Loggable {
 			List<User> found = (List<User>) request.getSession().getAttribute(ATTRIBUTE_USERS);
 			if (Objects.isNull(found)) {
 				getLogger().error(MSG_NO_PREV_SEARCH);
-				return SERVERPAGE_ADMIN;
+				return PARENT_DIR + SERVERPAGE_ADMIN;
 			}
 			getLogger().debug(found);
 			Optional<User> first = found.stream().filter(k -> k.getId() == id).findFirst();
 			if(!first.isPresent()) {
 				getLogger().error(MSG_NO_PREV_SEARCH);
-				return SERVERPAGE_ADMIN;
+				return PARENT_DIR + SERVERPAGE_ADMIN;
 			}
 			userService.update(first.get());
 			request.getSession().removeAttribute(ATTRIBUTE_USERS);
@@ -54,7 +54,7 @@ public class AdminUpdateUserCommand implements Command, Loggable {
 			e.printStackTrace();
 			getLogger().error(e);
 		}
-		return SERVERPAGE_ADMIN;
+		return PAGE_REDIRECT + PAGE_ADMIN;
 	}
 
 }

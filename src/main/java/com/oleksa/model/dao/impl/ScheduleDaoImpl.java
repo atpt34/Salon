@@ -25,11 +25,9 @@ import org.apache.logging.log4j.Logger;
 import com.oleksa.model.dao.ScheduleDao;
 import com.oleksa.model.entity.Record;
 import com.oleksa.model.entity.Schedule;
-import com.oleksa.model.entity.User;
-import com.oleksa.model.entity.UserRole;
 import com.oleksa.model.pagination.PaginationResult;
 
-import static com.oleksa.model.dao.impl.JdbcConstants.*;
+import static com.oleksa.model.dao.impl.DatabaseProperties.*;
 
 public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleDao {
 	
@@ -52,14 +50,14 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 	
 	@Override
 	public Schedule create(Schedule t) throws Exception {
-		int id = super.create(t, SC_INSERT, ScheduleDaoImpl::prepareInsert);
+		int id = super.create(t, SC_INSERT.getValue(), ScheduleDaoImpl::prepareInsert);
 		t.setId(id);
 		return t;
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		super.deleteById(SC_DELETE_BY_ID, id);
+		super.deleteById(SC_DELETE_BY_ID.getValue(), id);
 	}
 
 	private static void prepareUpdate(Schedule t, PreparedStatement statement) {
@@ -76,29 +74,29 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 	
 	@Override
 	public Schedule update(Schedule t) throws Exception {
-		super.update(t, SC_UPDATE, ScheduleDaoImpl::prepareUpdate);
+		super.update(t, SC_UPDATE.getValue(), ScheduleDaoImpl::prepareUpdate);
 		return t;
 	}
 
 	@Override
 	public Optional<Schedule> findById(Integer id) {
-		return super.findById(SC_SELECT_BY_ID, JdbcMapperImpl::mapToSchedule, id);
+		return super.findById(SC_SELECT_BY_ID.getValue(), JdbcMapperImpl::mapToSchedule, id);
 	}
 
 	@Override
 	public List<Schedule> findAll() {
-		return super.findAll(SC_SELECT_ALL, JdbcMapperImpl::mapToScheduleWithUser);
+		return super.findAll(SC_SELECT_ALL.getValue(), JdbcMapperImpl::mapToScheduleWithUser);
 	}
 
 	@Override
 	public List<Schedule> findAllByMasterId(int masterId) {
-		return super.findAllByForeignKey(SC_SELECT_BY_MASTER, masterId, JdbcMapperImpl::mapToSchedule);
+		return super.findAllByForeignKey(SC_SELECT_BY_MASTER.getValue(), masterId, JdbcMapperImpl::mapToSchedule);
 	}
 
 	@Override
 	public List<Schedule> findAllByMasterIdWithRecords(int masterId) {
 		try (Connection connection = dataSource.getConnection();
-			PreparedStatement statement = connection.prepareStatement(SC_SELECT_BY_MASTER_WITH_RECORDS);
+			PreparedStatement statement = connection.prepareStatement(SC_SELECT_BY_MASTER_WITH_RECORDS.getValue());
             ) {
 			Map<Schedule, Set<Record>> result = new HashMap<>();
 			statement.setInt(1, masterId);
@@ -106,11 +104,13 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
     			Map<Integer, Record> records = new HashMap<>();
     			while(resultSet.next()) {
     				Schedule schedule = JdbcMapperImpl.mapToSchedule(resultSet);
-    				Record record = JdbcMapperImpl.mapToRecord(resultSet);
-    				int recordId = record.getId();
-					records.putIfAbsent(recordId, record);
-					result.putIfAbsent(schedule, new HashSet<>());
-					result.get(schedule).add(records.get(recordId));
+    				result.putIfAbsent(schedule, new HashSet<>());
+    				if (resultSet.getInt(RC_ID.getValue()) != 0) {
+    					Record record = JdbcMapperImpl.mapToRecord(resultSet);
+    					int recordId = record.getId();
+    					records.putIfAbsent(recordId, record);
+    					result.get(schedule).add(records.get(recordId));
+    				}
                 }
             }
     		getLogger().debug(result);
@@ -130,7 +130,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 		try(Connection connection = dataSource.getConnection()) {
 			connection.setAutoCommit(false);
 			try (Statement statement = connection.createStatement();
-	            ResultSet resultSet = statement.executeQuery(SC_SELECT_COUNT);) {
+	            ResultSet resultSet = statement.executeQuery(SC_SELECT_COUNT.getValue());) {
 					if (resultSet.next()) {
 						total = resultSet.getInt(1);
 					} else {
@@ -138,7 +138,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
                         throw new RuntimeException("no count");
                     }
 				}
-			try (PreparedStatement statement = connection.prepareStatement(SC_SELECT_LIMIT);
+			try (PreparedStatement statement = connection.prepareStatement(SC_SELECT_LIMIT.getValue());
                 ) {
         			statement.setInt(1, itemsOnPage);
     				statement.setInt(2, offset);
@@ -160,7 +160,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 	public List<Schedule> findFreeOnDayAndTime(LocalDate day, LocalTime time) {
 		List<Schedule> result = new ArrayList<>();
 		try (Connection connection = dataSource.getConnection();
-			PreparedStatement statement = connection.prepareStatement(SC_SELECT_FREE_BY_DAY_AND_TIME);
+			PreparedStatement statement = connection.prepareStatement(SC_SELECT_FREE_BY_DAY_AND_TIME.getValue());
              ) {
 			statement.setTime(1, Time.valueOf(time));
 			statement.setDate(2, Date.valueOf(day));
@@ -177,8 +177,5 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 		}
 		return result;
 	}
-	
-
-
 
 }

@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,10 +25,9 @@ import com.oleksa.model.entity.Comment;
 import com.oleksa.model.entity.Record;
 import com.oleksa.model.entity.Schedule;
 import com.oleksa.model.entity.User;
-import com.oleksa.model.entity.UserRole;
 import com.oleksa.model.exception.RecordOccupiedException;
 
-import static com.oleksa.model.dao.impl.JdbcConstants.*;
+import static com.oleksa.model.dao.impl.DatabaseProperties.*;
 
 public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
 
@@ -56,7 +53,7 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
 			connection.setAutoCommit(false);
 			connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			int recordId = 0;
-			try(PreparedStatement statement = connection.prepareStatement(RC_INSERT, Statement.RETURN_GENERATED_KEYS);) {
+			try(PreparedStatement statement = connection.prepareStatement(RC_INSERT.getValue(), Statement.RETURN_GENERATED_KEYS);) {
 				prepareInsert(t, statement);
                 statement.executeUpdate();
                 try (ResultSet keys = statement.getGeneratedKeys()) {
@@ -69,7 +66,7 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
                     }
                 }
 			}
-			try(PreparedStatement statement = connection.prepareStatement(SR_RC_INSERT);) {
+			try(PreparedStatement statement = connection.prepareStatement(SR_RC_INSERT.getValue());) {
 				Set<Schedule> schedules = t.getSchedules();
 				for (Schedule schedule : schedules) {
 					int scheduleId = schedule.getId();
@@ -88,15 +85,15 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
 	}
 
 	@Override
-	public void deleteById(Integer i) {
-		
+	public void deleteById(Integer id) {
+		super.deleteById(RC_DELETE_BY_ID.getValue(), id);
 	}
 
 	@Override
 	public Record update(Record record) throws Exception {
 		try(Connection connection = dataSource.getConnection()) {
 			connection.setAutoCommit(false);
-			try(PreparedStatement statement = connection.prepareStatement(CM_INSERT, Statement.RETURN_GENERATED_KEYS);) {
+			try(PreparedStatement statement = connection.prepareStatement(CM_INSERT.getValue(), Statement.RETURN_GENERATED_KEYS);) {
 				Comment comment = record.getComment();
 				statement.setString(1, comment.getText());
 				statement.setInt(2, comment.getStars());
@@ -110,7 +107,7 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
                     }
                 }
 			}
-			try(PreparedStatement statement = connection.prepareStatement(RC_UPDATE, Statement.RETURN_GENERATED_KEYS);) {
+			try(PreparedStatement statement = connection.prepareStatement(RC_UPDATE.getValue(), Statement.RETURN_GENERATED_KEYS);) {
 				Comment comment = record.getComment();
 				statement.setInt(1, record.getClient().getId());
 				statement.setTime(2, Time.valueOf(record.getHour()));
@@ -129,23 +126,23 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
 
 	@Override
 	public Optional<Record> findById(Integer id) {
-		return super.findById(RC_COMMENT_ID, JdbcMapperImpl::mapToRecord, id);
+		return super.findById(RC_COMMENT_ID.getValue(), JdbcMapperImpl::mapToRecord, id);
 	}
 
 	@Override
 	public List<Record> findAll() {
-		return super.findAll(RC_SELECT_ALL, JdbcMapperImpl::mapToRecord);
+		return super.findAll(RC_SELECT_ALL.getValue(), JdbcMapperImpl::mapToRecord);
 	}
 
 	@Override
 	public List<Record> findAllByClientId(int clientId) {
-		return super.findAllByForeignKey(RC_SELECT_BY_CLIENT, clientId, JdbcMapperImpl::mapToRecord);
+		return super.findAllByForeignKey(RC_SELECT_BY_CLIENT.getValue(), clientId, JdbcMapperImpl::mapToRecord);
 	}
 	
 	@Override
 	public List<Record> findAllByClientIdWithMaster(int clientId) {
 		try (Connection connection = dataSource.getConnection();
-				PreparedStatement statement = connection.prepareStatement(RC_SELECT_ALL_WITH_MASTER);
+				PreparedStatement statement = connection.prepareStatement(RC_SELECT_ALL_WITH_MASTER_COMMENT.getValue());
 	            ) {
 			Map<Record, Set<Schedule>> result = new HashMap<>();
 			statement.setInt(1, clientId);
@@ -161,6 +158,10 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
     				int scheduleId = schedule.getId();
 					schedules.putIfAbsent(scheduleId, schedule);
 					Record record = JdbcMapperImpl.mapToRecord(resultSet);
+					if (resultSet.getInt(CM_ID.getValue()) != 0) {
+						Comment comment = JdbcMapperImpl.mapToComment(resultSet);
+						record.setComment(comment);
+					}
     				result.putIfAbsent(record, new HashSet<>());
 					result.get(record).add(schedules.get(scheduleId));
     			}
@@ -176,7 +177,7 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
 	
 	@Override
 	public List<Record> findAllWithComments() {
-		return super.findAll(RC_SELECT_ALL_COMMENTS, JdbcMapperImpl::mapToRecordWithCommentAndUser);
+		return super.findAll(RC_SELECT_ALL_COMMENTS.getValue(), JdbcMapperImpl::mapToRecordWithCommentAndUser);
 	}
 
 }

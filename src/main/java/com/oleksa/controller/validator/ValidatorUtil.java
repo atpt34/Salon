@@ -4,9 +4,12 @@ import static com.oleksa.controller.constants.RegexConstants.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
+import com.oleksa.controller.exception.UnparsableDateParameter;
 import com.oleksa.controller.exception.UnparsableIdException;
+import com.oleksa.controller.exception.UnparsableTimeParameter;
 
 public class ValidatorUtil {
 	
@@ -82,17 +85,25 @@ public class ValidatorUtil {
 		return 0;
 	}
 	
-	public static LocalTime parseTimeParameter(String timeParam) {
+	public static LocalTime parseTimeParameter(String timeParam) throws UnparsableTimeParameter {
 		if(validTime(timeParam)) {
-			return LocalTime.parse(timeParam);
+			try {
+				return LocalTime.parse(timeParam);
+			} catch(DateTimeParseException e) {
+				throw new UnparsableTimeParameter(e);
+			}
 		}
-		return LocalTime.NOON;
+		throw new UnparsableTimeParameter();
 	}
 	
-	public static LocalDate parseDateParameter(String dateParam) {
+	public static LocalDate parseDateParameter(String dateParam) throws UnparsableDateParameter {
 		if(validDate(dateParam)) {
-			return LocalDate.parse(dateParam);
+			try {
+				return LocalDate.parse(dateParam);
+			} catch(DateTimeParseException e) {
+				throw new UnparsableDateParameter(e);
+			}
 		}
-		return LocalDate.now();
+		throw new UnparsableDateParameter();
 	}
 }

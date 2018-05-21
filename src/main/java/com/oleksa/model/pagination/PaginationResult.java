@@ -6,13 +6,12 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class PaginationResult<T> {
+public final class PaginationResult<T> {
 
-	private List<T> items;
-	private int total;
-	private int page;
-	private int totalPages;
-	
+	private final List<T> items;
+	private final int total;
+	private final int page;
+	private final int totalPages;
 	
 	public PaginationResult(List<T> items, int page, int itemsOnPage, int total) {
 		this.items = items;
@@ -33,24 +32,12 @@ public class PaginationResult<T> {
 		return items;
 	}
 
-	public void setItems(List<T> items) {
-		this.items = items;
-	}
-
 	public int getPage() {
 		return page;
 	}
 
-	public void setPage(int page) {
-		this.page = page;
-	}
-
 	public int getTotalPages() {
 		return totalPages;
-	}
-
-	public void setTotalPages(int totalPages) {
-		this.totalPages = totalPages;
 	}
 
 	@Override
@@ -58,7 +45,5 @@ public class PaginationResult<T> {
 		return "PaginationResult [items=" + items + ", total=" + total + ", page=" + page + ", totalPages=" + totalPages
 				+ "]";
 	}
-
-
 	
 }

@@ -4,23 +4,18 @@ import java.io.IOException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.oleksa.controller.SalonServlet;
 import com.oleksa.controller.exception.AccessDeniedException;
 import com.oleksa.model.entity.User;
 import com.oleksa.model.entity.UserRole;
@@ -48,12 +43,17 @@ public final class AuthFilter implements Filter, Loggable {
         String path = req.getRequestURI();
         getLogger().info("path: " + path);
         Optional<User> user = (Optional<User>) session.getAttribute(PARAM_USER);
-        MAP.forEach((k, v) -> { 
-	    	  if (path.contains(k) && (!user.isPresent() || user.get().getRole() != v))
-	    		  throw new AccessDeniedException(MSG_ACCESS_DENIED); 
-	    	  } );
+        checkAccess(path, user);
         chain.doFilter(request,response);
     }
+
+	private void checkAccess(String path, Optional<User> user) {
+		for (Entry<String, UserRole> entry : MAP.entrySet()) {
+			if (path.contains(entry.getKey()) && (!user.isPresent() || user.get().getRole() != entry.getValue())) {
+	    		  throw new AccessDeniedException(MSG_ACCESS_DENIED); 
+			}
+		}
+	}
 
     @Override
     public void destroy() {

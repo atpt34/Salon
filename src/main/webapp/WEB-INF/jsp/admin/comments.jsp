@@ -7,7 +7,9 @@
     <jsp:include page="../header.jsp" />
     <h2><fmt:message key="page.comments"/></h2>
     <c:forEach var="rc" items="${records}">
-    	<c:out value="${rc}"></c:out>
+    	<c:out value="${rc.client.email}"></c:out>
+    	<c:out value="${rc.comment.text}"></c:out>
+    	<c:out value="${rc.comment.stars}"></c:out>
     </c:forEach>
     <jsp:include page="../footer.jsp" />
 </body>
