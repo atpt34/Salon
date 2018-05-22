@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import com.oleksa.model.dao.ScheduleDao;
 import com.oleksa.model.entity.Record;
 import com.oleksa.model.entity.Schedule;
+import com.oleksa.model.exception.InvalidIntervalException;
 import com.oleksa.model.pagination.PaginationResult;
 
 import static com.oleksa.model.dao.impl.DatabaseProperties.*;
@@ -49,10 +50,16 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 	}
 	
 	@Override
-	public Schedule create(Schedule t) throws Exception {
-		int id = super.create(t, SC_INSERT.getValue(), ScheduleDaoImpl::prepareInsert);
-		t.setId(id);
-		return t;
+	public Schedule create(Schedule t) throws InvalidIntervalException {
+		int id;
+		try {
+			id = super.create(t, SC_INSERT.getValue(), ScheduleDaoImpl::prepareInsert);
+			t.setId(id);
+			return t;
+		} catch (SQLException e) {
+			getLogger().error(e);
+			throw new InvalidIntervalException();
+		}
 	}
 
 	@Override

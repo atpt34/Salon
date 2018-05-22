@@ -79,7 +79,7 @@ public class ValidatorUtilTest {
 	public void testParseValidTime() {
 		Stream.of(null, "", "name", ":", "000:0", "000:00", "00:000", "00:0", "000:000", "0:0", "00:0", "0:00", ":00", "00:", "24:00", "34:00", "00:61", "23:70")
 		.forEach(p -> assertFalse(ValidatorUtil.validTime(p)));
-		Stream.of("00:00", "23:59", "10:30", "19:00", "00:59", "09:45", "14:09", "01:50", "23:50")
+		Stream.of("00:00", "20:00", "12:00", "10:00", "19:00", "09:00", "14:00", "01:00", "23:00")
 		.forEach(p -> assertTrue(ValidatorUtil.validTime(p)));
 	}
 	
@@ -99,7 +99,7 @@ public class ValidatorUtilTest {
 	
 	@Test
 	public void testParseTimeParamParsable() {
-		Stream.of("00:00", "23:59", "10:30", "19:00", "00:59", "09:45", "14:09", "01:50", "23:50")
+		Stream.of("00:00", "20:00", "12:00", "10:00", "19:00", "09:00", "14:00", "01:00", "23:00")
 		.forEach(p -> { String[] split = p.split(":"); 
 						int hour = Integer.parseInt(split[0]);
 						int minute = Integer.parseInt(split[1]);

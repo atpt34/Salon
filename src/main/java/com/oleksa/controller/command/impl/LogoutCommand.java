@@ -9,7 +9,6 @@ public final class LogoutCommand implements Command {
 
     @Override
     public final String execute(HttpServletRequest request) {
-        System.out.println("logout command");
         if (CommandUtil.isUserLogged(request)) {
             CommandUtil.unsetUser(request);
         }

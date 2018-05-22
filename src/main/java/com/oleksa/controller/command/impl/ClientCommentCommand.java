@@ -28,7 +28,6 @@ public class ClientCommentCommand implements Command, Loggable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
-		Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
 		String text = request.getParameter(PARAM_TEXT);
 		String stars = request.getParameter(PARAM_STARS);
 		String idParam = request.getParameter(PARAM_ID);
@@ -54,7 +53,9 @@ public class ClientCommentCommand implements Command, Loggable {
 			request.setAttribute(PARAM_ERROR, MSG_NO_CHOSEN_RECORDS);
 			return SERVERPAGE_CLIENT;
 		}
+		Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
 		Record record = first.get();
+		record.setClient(client.get());
 		record.setComment(comment);
 		recordService.update(record);
 		request.getSession().removeAttribute(ATTRIBUTE_RECORDS);

@@ -14,6 +14,7 @@ import com.oleksa.controller.exception.UnparsableTimeParameter;
 import com.oleksa.controller.validator.ValidatorUtil;
 import com.oleksa.model.entity.Schedule;
 import com.oleksa.model.entity.User;
+import com.oleksa.model.exception.InvalidIntervalException;
 import com.oleksa.model.logger.Loggable;
 import com.oleksa.model.service.ScheduleService;
 
@@ -35,7 +36,7 @@ public class MasterCreateScheduleCommand implements Command, Loggable {
 		} catch (UnparsableDateParameter e) {
 			getLogger().error(e);
 			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
-			return SERVERPAGE_MASTER;
+			return PARENT_DIR + SERVERPAGE_MASTER;
 		}
 		LocalTime startHour = null;
 		try {
@@ -44,7 +45,7 @@ public class MasterCreateScheduleCommand implements Command, Loggable {
 		} catch (UnparsableTimeParameter e) {
 			getLogger().error(e);
 			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
-			return SERVERPAGE_MASTER;
+			return PARENT_DIR + SERVERPAGE_MASTER;
 		}
 		LocalTime endHour = null;
 		try {
@@ -53,11 +54,17 @@ public class MasterCreateScheduleCommand implements Command, Loggable {
 		} catch (UnparsableTimeParameter e) {
 			getLogger().error(e);
 			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
-			return SERVERPAGE_MASTER;
+			return PARENT_DIR + SERVERPAGE_MASTER;
 		}
 		Optional<User> master = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
 		Schedule schedule = new Schedule(null, master.get(), day, startHour, endHour, null);
-		scheduleService.create(schedule);
+		try {
+			scheduleService.create(schedule);
+		} catch (InvalidIntervalException e) {
+			getLogger().error(e);
+			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
+			return PARENT_DIR + SERVERPAGE_MASTER;
+		}
 		return PAGE_REDIRECT + PAGE_MASTER;
 	}
 

@@ -27,10 +27,10 @@ public class RecordServiceImpl implements RecordService {
 		
 		private static final Properties PROPERTIES = new Properties();
 		static {
-			BeautySalonMail.PROPERTIES.put("mail.smtp.auth", "true");
-			BeautySalonMail.PROPERTIES.put("mail.smtp.starttls.enable", "true");
-			BeautySalonMail.PROPERTIES.put("mail.smtp.host", "smtp.gmail.com");
-			BeautySalonMail.PROPERTIES.put("mail.smtp.port", "587");
+			PROPERTIES.setProperty("mail.smtp.auth", "true");
+			PROPERTIES.setProperty("mail.smtp.starttls.enable", "true");
+			PROPERTIES.setProperty("mail.smtp.host", "smtp.gmail.com");
+			PROPERTIES.setProperty("mail.smtp.port", "587");
 		}
 		
 		private final String value;

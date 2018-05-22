@@ -5,9 +5,13 @@ import java.time.LocalTime;
 import java.util.List;
 
 import com.oleksa.model.entity.Schedule;
+import com.oleksa.model.exception.InvalidIntervalException;
 import com.oleksa.model.pagination.PaginationResult;
 
 public interface ScheduleDao extends CrudDao<Schedule, Integer> {
+
+	@Override
+	Schedule create(Schedule t) throws InvalidIntervalException;
 
 	List<Schedule> findAllByMasterId(int masterId);
 	

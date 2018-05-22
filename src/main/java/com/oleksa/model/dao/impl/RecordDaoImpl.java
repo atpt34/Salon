@@ -51,7 +51,6 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
 	public Record create(Record t) throws RecordOccupiedException {
 		try(Connection connection = dataSource.getConnection()) {
 			connection.setAutoCommit(false);
-			connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			int recordId = 0;
 			try(PreparedStatement statement = connection.prepareStatement(RC_INSERT.getValue(), Statement.RETURN_GENERATED_KEYS);) {
 				prepareInsert(t, statement);

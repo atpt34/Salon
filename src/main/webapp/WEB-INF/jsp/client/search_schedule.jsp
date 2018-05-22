@@ -17,7 +17,12 @@
     <input type="time" name="time" step="3600" value="${time }"/>
      <br/><br/>
 	<c:forEach var="sc" items="${schedules}">
-		<input type="checkbox" name="id" value="${sc.id}" />${sc}<br/>
+		<input type="checkbox" name="id" value="${sc.id}" />
+		<c:out value="${sc.master.fullname }"/>
+		<c:out value="${sc.master.email }"/>
+		<c:out value="${sc.day }"/>
+		<c:out value="${sc.startHour }"/> - <c:out value="${sc.endHour }"/>
+		<br/>
 	</c:forEach>
    	  <br/><br/>
 	<button formaction="${pageContext.request.contextPath}/client/create_record"><fmt:message key="page.create"/></button>

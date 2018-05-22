@@ -61,7 +61,7 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
 
     @Override
     public User create(User u) throws NotUniqueNameException, NotUniqueEmailException {
-        int id = u.getId();
+        int id;
         try {
             id = super.create(u, US_INSERT.getValue(), UserDaoImpl::prepareInsert);
             u.setId(id);

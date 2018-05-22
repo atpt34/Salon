@@ -7,6 +7,7 @@ import java.util.List;
 import com.oleksa.model.dao.ScheduleDao;
 import com.oleksa.model.entity.Schedule;
 import com.oleksa.model.entity.User;
+import com.oleksa.model.exception.InvalidIntervalException;
 import com.oleksa.model.pagination.PaginationResult;
 import com.oleksa.model.service.ScheduleService;
 
@@ -20,13 +21,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public Schedule create(Schedule schedule) {
-		try {
-			return scheduleDao.create(schedule);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+	public Schedule create(Schedule schedule) throws InvalidIntervalException {
+		return scheduleDao.create(schedule);
 	}
 
 	@Override

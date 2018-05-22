@@ -10,6 +10,7 @@
     	<c:out value="${rc.client.email}"></c:out>
     	<c:out value="${rc.comment.text}"></c:out>
     	<c:out value="${rc.comment.stars}"></c:out>
+    	<br/>
     </c:forEach>
     <jsp:include page="../footer.jsp" />
 </body>

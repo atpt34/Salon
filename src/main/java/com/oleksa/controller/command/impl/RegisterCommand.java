@@ -8,12 +8,13 @@ import com.oleksa.model.entity.User;
 import com.oleksa.model.entity.UserRole;
 import com.oleksa.model.exception.NotUniqueEmailException;
 import com.oleksa.model.exception.NotUniqueNameException;
+import com.oleksa.model.logger.Loggable;
 import com.oleksa.model.service.ServiceFactory;
 import com.oleksa.model.service.UserService;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
-public final class RegisterCommand implements Command {
+public final class RegisterCommand implements Command, Loggable {
 
     private UserService service;
     
@@ -23,7 +24,6 @@ public final class RegisterCommand implements Command {
 
 	@Override
     public String execute(HttpServletRequest request) {
-        System.out.println("register command");
         if(CommandUtil.isUserLogged(request)) {
             request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);
             return PAGE_LOGIN;
@@ -40,9 +40,9 @@ public final class RegisterCommand implements Command {
             request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
             return PAGE_REGISTER;
         }
-        System.out.println(name + " " + pass + " " + email + " " + fullname);
+        getLogger().info(name + " " + pass + " " + email + " " + fullname);
         
-        User user = new User(0, name, email, pass, UserRole.CLIENT, fullname);
+        User user = new User(null, name, email, pass, UserRole.CLIENT, fullname);
         try {
             user = service.create(user);
             if (!CommandUtil.setLoggedUser(request, user)) {
