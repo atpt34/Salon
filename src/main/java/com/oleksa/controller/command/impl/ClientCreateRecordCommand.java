@@ -35,63 +35,53 @@ public class ClientCreateRecordCommand implements Command, Loggable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
-		String timeParam = request.getParameter(PARAM_TIME);
-		String dateParam = request.getParameter(PARAM_DATE);
 		LocalTime time = null;
 		LocalDate date = null;
 		try {
+			String timeParam = request.getParameter(PARAM_TIME);
+			String dateParam = request.getParameter(PARAM_DATE);
 			time = ValidatorUtil.parseTimeParameter(timeParam);
 			date = ValidatorUtil.parseDateParameter(dateParam);
-		} catch (UnparsableTimeParameter | UnparsableDateParameter e) {
-			getLogger().error(e);
-			request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
-			request.setAttribute(PARAM_DATE, LocalDate.now());
-			request.setAttribute(PARAM_TIME, LocalTime.NOON);
-			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
-		} 
-		String[] ids = request.getParameterValues(PARAM_ID);
-		Map<Integer, Schedule> found = (Map<Integer, Schedule>) request.getSession().getAttribute(ATTRIBUTE_SCHEDULES);
-		if(Objects.isNull(ids) || (ids.length == 0) || Objects.isNull(found) || found.isEmpty()) {
-			getLogger().error(MSG_NO_CHOSEN_SCHEDULES);
-			request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
-			request.setAttribute(PARAM_DATE, LocalDate.now());
-			request.setAttribute(PARAM_TIME, LocalTime.NOON);
-			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
-		}
-		getLogger().debug(Arrays.toString(ids));
-		getLogger().debug(found);
-		Set<Schedule> schedules = new HashSet<>();
-		for (String idParam : ids) {
-			try {
+			String[] ids = request.getParameterValues(PARAM_ID);
+			Map<Integer, Schedule> found = 
+					(Map<Integer, Schedule>) request.getSession().getAttribute(ATTRIBUTE_SCHEDULES);
+			if(Objects.isNull(ids) || (ids.length == 0) || Objects.isNull(found) || found.isEmpty()) {
+				getLogger().error(MSG_NO_CHOSEN_SCHEDULES);
+				return handleException(request, LocalTime.NOON, LocalDate.now());
+			}
+			getLogger().debug(Arrays.toString(ids));
+			getLogger().debug(found);
+			Set<Schedule> schedules = new HashSet<>();
+			for (String idParam : ids) {
 				int id = ValidatorUtil.parseIdParameter(idParam);
 				if (found.containsKey(id)) {
 					schedules.add(found.get(id));
 				}
-			} catch (UnparsableIdException e) {
-				getLogger().error(e);
-				return PARENT_DIR + SERVERPAGE_CLIENT;
 			}
-		}
-		if (schedules.isEmpty()) {
-			request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
-			request.setAttribute(PARAM_DATE, LocalDate.now());
-			request.setAttribute(PARAM_TIME, LocalTime.NOON);
-			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
-		}
-		getLogger().debug(schedules);
-		Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
-		Record record = new Record(null, client.get(), time, date, null, schedules);
-		try {
+			if (schedules.isEmpty()) {
+				getLogger().error(MSG_NO_PREV_SEARCH);
+				return handleException(request, LocalTime.NOON, LocalDate.now());
+			}
+			getLogger().debug(schedules);
+			Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
+			Record record = new Record(null, client.get(), time, date, null, schedules);
 			recordService.create(record);
 			request.getSession().removeAttribute(ATTRIBUTE_SCHEDULES);
-		} catch (RecordOccupiedException e) {
+			return PAGE_REDIRECT + PAGE_CLIENT;
+		} catch (UnparsableTimeParameter | UnparsableDateParameter e) {
 			getLogger().error(e);
-			request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
-			request.setAttribute(PARAM_DATE, date);
-			request.setAttribute(PARAM_TIME, time);
-			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
+			return handleException(request, LocalTime.NOON, LocalDate.now());
+		} catch (UnparsableIdException | RecordOccupiedException e) {
+			getLogger().error(e);
+			return handleException(request, time, date);
 		}
-		return PAGE_REDIRECT + PAGE_CLIENT;
+	}
+
+	private String handleException(HttpServletRequest request, LocalTime time, LocalDate date) {
+		request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
+		request.setAttribute(PARAM_DATE, date);
+		request.setAttribute(PARAM_TIME, time);
+		return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
 	}
 
 }

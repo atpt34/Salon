@@ -32,22 +32,24 @@ public class ClientDeleteCommand implements Command, Loggable {
 			List<Record> found = (List<Record>) request.getSession().getAttribute(ATTRIBUTE_RECORDS);
 			getLogger().info(found);
 			if (Objects.isNull(found) || found.isEmpty()) {
-				getLogger().error(MSG_NO_PREV_SEARCH);
-				request.setAttribute(PARAM_ERROR, MSG_NO_PREV_SEARCH);
-				return PARENT_DIR + SERVERPAGE_CLIENT;
+				return handleNoPreviousSearch(request);
 			}
 			Optional<Record> record = found.stream().filter(k -> k.getId().equals(id) ).findFirst();
 			getLogger().info(record);
 			if (!record.isPresent()) {
-				getLogger().error(MSG_NO_PREV_SEARCH);
-				request.setAttribute(PARAM_ERROR, MSG_NO_PREV_SEARCH);
-				return PARENT_DIR + SERVERPAGE_CLIENT;
+				return handleNoPreviousSearch(request);
 			}
 			recordService.delete(record.get());
 			request.getSession().removeAttribute(ATTRIBUTE_RECORDS);
+			return PAGE_REDIRECT + PAGE_CLIENT;
 		} catch (UnparsableIdException e) {
-			getLogger().error(MSG_NO_PREV_SEARCH);
+			return handleNoPreviousSearch(request);
 		}
+	}
+
+	private String handleNoPreviousSearch(HttpServletRequest request) {
+		getLogger().error(MSG_NO_PREV_SEARCH);
+		request.setAttribute(PARAM_ERROR, MSG_NO_PREV_SEARCH);
 		return PARENT_DIR + SERVERPAGE_CLIENT;
 	}
 

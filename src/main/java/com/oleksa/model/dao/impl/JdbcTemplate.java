@@ -1,10 +1,11 @@
 package com.oleksa.model.dao.impl;
 
+import static com.oleksa.model.dao.impl.DatabaseProperties.SC_SELECT_COUNT;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,11 +46,12 @@ public abstract class JdbcTemplate<T> implements Loggable {
             }
         } catch (SQLException e) {
             getLogger().error(e);
+            throw new RuntimeException(e);
         }
         return result;
     }
     
-    public List<T> findAllByForeignKey(String sql, int foreignId, Function<ResultSet, T> mapToType) {
+    List<T> findAllByForeignKey(String sql, int foreignId, Function<ResultSet, T> mapToType) {
     	List<T> result = new ArrayList<>();
         try(Connection connection = dataSource.getConnection();
         		PreparedStatement statement = connection.prepareStatement(sql);
@@ -63,6 +65,7 @@ public abstract class JdbcTemplate<T> implements Loggable {
                 }
         } catch (SQLException e) {
         	getLogger().error(e);
+        	throw new RuntimeException(e);
         }
         return result;
 	}
@@ -79,6 +82,7 @@ public abstract class JdbcTemplate<T> implements Loggable {
                     }
             } catch (SQLException e) {
             	getLogger().error(e);
+            	throw new RuntimeException(e);
             }
             return Optional.empty();
     }
@@ -95,8 +99,24 @@ public abstract class JdbcTemplate<T> implements Loggable {
                     }
             } catch (SQLException e) {
             	getLogger().error(e);
+            	throw new RuntimeException(e);
             }
             return Optional.empty();
+    }
+    
+    int count(String sql) {
+    	try(Connection connection = dataSource.getConnection();
+    		PreparedStatement statement = connection.prepareStatement(sql);
+	        ResultSet resultSet = statement.executeQuery();) {
+				if (resultSet.next()) {
+					return resultSet.getInt(1);
+				}
+                getLogger().error("no count");
+                throw new RuntimeException("no count");
+		} catch(SQLException e) {
+			getLogger().error(e);
+			throw new RuntimeException(e);
+		}
     }
     
     void deleteById(String sql, int id) {
@@ -107,13 +127,13 @@ public abstract class JdbcTemplate<T> implements Loggable {
                     statement.executeUpdate();
             } catch (SQLException e) {
             	getLogger().error(e);
-                e.printStackTrace();
+            	throw new RuntimeException(e);
            }
     }
     
     int create(T t, String sql, BiConsumer<T, PreparedStatement> preparator) throws SQLException {
         try(Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
                 ) {
                     preparator.accept(t, statement);
                     statement.executeUpdate();

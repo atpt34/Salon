@@ -29,7 +29,10 @@ public enum DatabaseProperties {
 	SC_SELECT_ALL("SELECT * FROM schedule_t INNER JOIN user_t ON us_id = sc_master_id"),
 	SC_SELECT_COUNT("SELECT COUNT(*) FROM schedule_t INNER JOIN user_t ON us_id = sc_master_id"),
 	SC_SELECT_LIMIT("SELECT * FROM schedule_t INNER JOIN user_t ON us_id = sc_master_id "
-			+ "ORDER BY sc_master_id LIMIT ? OFFSET ?"),
+			+ "ORDER BY sc_master_id, sc_day LIMIT ? OFFSET ?"),
+	SC_SELECT_BY_DATE_LIMIT("SELECT * FROM schedule_t INNER JOIN user_t ON us_id = sc_master_id "
+			+ "ORDER BY sc_day LIMIT ? OFFSET ?"),
+	SC_SELECT_OCCUPIED_HOURS_BY_ID("SELECT so_time FROM schedule_occupied_time_t WHERE so_sc_id = ?"),
 	SC_SELECT_BY_MASTER("SELECT * FROM schedule_t WHERE sc_master_id = ?"),
 	SC_SELECT_BY_MASTER_WITH_RECORDS("SELECT * FROM schedule_t LEFT JOIN schedule_record_m2m ON sc_id = sr_sc_id "
 			+ "LEFT JOIN record_t ON sr_rc_id = rc_id WHERE sc_master_id = ?"),

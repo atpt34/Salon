@@ -29,43 +29,22 @@ public class MasterCreateScheduleCommand implements Command, Loggable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
-		LocalDate day = null;
 		try {
 			String dateParam = request.getParameter(PARAM_DATE);
-			day = ValidatorUtil.parseDateParameter(dateParam);
-		} catch (UnparsableDateParameter e) {
-			getLogger().error(e);
-			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
-			return PARENT_DIR + SERVERPAGE_MASTER;
-		}
-		LocalTime startHour = null;
-		try {
+			LocalDate day = ValidatorUtil.parseDateParameter(dateParam);
 			String startTimeParam = request.getParameter(PARAM_START_TIME);
-			startHour = ValidatorUtil.parseTimeParameter(startTimeParam);
-		} catch (UnparsableTimeParameter e) {
-			getLogger().error(e);
-			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
-			return PARENT_DIR + SERVERPAGE_MASTER;
-		}
-		LocalTime endHour = null;
-		try {
+			LocalTime startHour = ValidatorUtil.parseTimeParameter(startTimeParam);
 			String finishTimeParam = request.getParameter(PARAM_FINISH_TIME);
-			endHour = ValidatorUtil.parseTimeParameter(finishTimeParam);
-		} catch (UnparsableTimeParameter e) {
-			getLogger().error(e);
-			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
-			return PARENT_DIR + SERVERPAGE_MASTER;
-		}
-		Optional<User> master = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
-		Schedule schedule = new Schedule(null, master.get(), day, startHour, endHour, null);
-		try {
+			LocalTime endHour = ValidatorUtil.parseTimeParameter(finishTimeParam);
+			Optional<User> master = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
+			Schedule schedule = new Schedule(null, master.get(), day, startHour, endHour, null);
 			scheduleService.create(schedule);
-		} catch (InvalidIntervalException e) {
+			return PAGE_REDIRECT + PAGE_MASTER;
+		} catch (UnparsableDateParameter|UnparsableTimeParameter|InvalidIntervalException e) {
 			getLogger().error(e);
 			request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
 			return PARENT_DIR + SERVERPAGE_MASTER;
 		}
-		return PAGE_REDIRECT + PAGE_MASTER;
 	}
 
 }

@@ -8,7 +8,6 @@ import com.oleksa.controller.validator.ValidatorUtil;
 import com.oleksa.model.entity.User;
 import com.oleksa.model.entity.UserRole;
 import com.oleksa.model.exception.InvalidCredentialsException;
-import com.oleksa.model.service.ServiceFactory;
 import com.oleksa.model.service.UserService;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
@@ -26,18 +25,18 @@ public final class LoginCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        if (CommandUtil.isUserLogged(request)) {
-            request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);
-            return PAGE_LOGIN;
-        }
-        String name = request.getParameter(PARAM_NAME);
-        String pass = request.getParameter(PARAM_PASS);
-        if (!ValidatorUtil.isValidName(name)
-                || !ValidatorUtil.validPassword(pass)){
-            request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
-            return PAGE_LOGIN;
-        }
         try {
+        	if (CommandUtil.isUserLogged(request)) {
+                request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);
+                return PAGE_LOGIN;
+            }
+            String name = request.getParameter(PARAM_NAME);
+            String pass = request.getParameter(PARAM_PASS);
+            if (!ValidatorUtil.isValidName(name)
+                    || !ValidatorUtil.validPassword(pass)){
+                request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
+                return PAGE_LOGIN;
+            }
             User user = service.findUserByCredentials(name, pass);
             if (!CommandUtil.setLoggedUser(request, user)) {
                 request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);

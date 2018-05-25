@@ -5,13 +5,11 @@
   <servlet>
     <servlet-name>simpleServlet</servlet-name>
     <servlet-class>com.oleksa.controller.SalonServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>simpleServlet</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
-  
    
   <welcome-file-list>
     <welcome-file>/WEB-INF/jsp/about.jsp</welcome-file>
@@ -38,6 +36,7 @@
   <listener>
     <listener-class>com.oleksa.controller.listener.SessionListener</listener-class>
   </listener>
+  
   <listener>
     <listener-class>com.oleksa.controller.listener.ContextListener</listener-class>
   </listener>

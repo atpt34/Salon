@@ -21,7 +21,6 @@ public class AdminUsersCommand implements Command {
 	@Override
 	public String execute(HttpServletRequest request) {
 		List<User> find = service.findAll();
-		System.out.println(find);
 		request.getSession().setAttribute(ATTRIBUTE_USERS, find);
 		request.setAttribute(PARAM_USERS, find);
 		return SERVERPAGE_ADMIN_USERS;

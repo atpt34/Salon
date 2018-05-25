@@ -24,26 +24,24 @@ public final class RegisterCommand implements Command, Loggable {
 
 	@Override
     public String execute(HttpServletRequest request) {
-        if(CommandUtil.isUserLogged(request)) {
-            request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);
-            return PAGE_LOGIN;
-        }
-        String name = request.getParameter(PARAM_NAME);
-        String pass = request.getParameter(PARAM_PASS);
-        String email = request.getParameter(PARAM_EMAIL);
-        String fullname = request.getParameter(PARAM_FULLNAME);
-        
-        if(!ValidatorUtil.isValidName(name)
-                || !ValidatorUtil.validPassword(pass)
-                || !ValidatorUtil.validEmail(email)
-                || !ValidatorUtil.validFullname(fullname)){
-            request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
-            return PAGE_REGISTER;
-        }
-        getLogger().info(name + " " + pass + " " + email + " " + fullname);
-        
-        User user = new User(null, name, email, pass, UserRole.CLIENT, fullname);
         try {
+        	if (CommandUtil.isUserLogged(request)) {
+                request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);
+                return PAGE_LOGIN;
+            }
+            String name = request.getParameter(PARAM_NAME);
+            String pass = request.getParameter(PARAM_PASS);
+            String email = request.getParameter(PARAM_EMAIL);
+            String fullname = request.getParameter(PARAM_FULLNAME);
+            if (!ValidatorUtil.isValidName(name)
+                    || !ValidatorUtil.validPassword(pass)
+                    || !ValidatorUtil.validEmail(email)
+                    || !ValidatorUtil.validFullname(fullname)) {
+                request.setAttribute(PARAM_ERROR, MSG_INVALID_INPUT);
+                return PAGE_REGISTER;
+            }
+            getLogger().info(name + " " + pass + " " + email + " " + fullname);
+            User user = new User(null, name, email, pass, UserRole.CLIENT, fullname);
             user = service.create(user);
             if (!CommandUtil.setLoggedUser(request, user)) {
                 request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);

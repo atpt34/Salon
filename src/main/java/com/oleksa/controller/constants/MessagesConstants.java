@@ -27,6 +27,7 @@ public interface MessagesConstants {
     String PARAM_RECORDS = "records";
     String PARAM_USERS = "users";
     
+    String URL_CONTEXT = "/BeautySalon";
     String URL_CHANGE_LANGUAGE = "/changeLanguage";
     String URL_REGISTER = "/register";
     String URL_LOGOUT = "/logout";

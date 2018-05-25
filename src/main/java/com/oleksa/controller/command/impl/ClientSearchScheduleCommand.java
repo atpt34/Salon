@@ -30,13 +30,21 @@ public class ClientSearchScheduleCommand implements Command, Loggable {
 
 	@Override
 	public String execute(HttpServletRequest request) {
-		String timeParam = request.getParameter(PARAM_TIME);
-		String dateParam = request.getParameter(PARAM_DATE);
 		LocalTime time = null;
 		LocalDate date = null;
 		try {
+			String timeParam = request.getParameter(PARAM_TIME);
+			String dateParam = request.getParameter(PARAM_DATE);
 			time = ValidatorUtil.parseTimeParameter(timeParam);
 			date = ValidatorUtil.parseDateParameter(dateParam);
+			List<Schedule> find = scheduleService.findFreeOnDayAndTime(date, time);
+			Map<Integer, Schedule> collect = find.stream().collect(Collectors.toMap(Schedule::getId, Function.identity()));
+			getLogger().info(collect);
+			request.getSession().setAttribute(ATTRIBUTE_SCHEDULES, collect);
+			request.setAttribute(PARAM_SCHEDULES, find);
+			request.setAttribute(PARAM_DATE, date);
+			request.setAttribute(PARAM_TIME, time);
+			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
 		} catch (UnparsableTimeParameter | UnparsableDateParameter e) {
 			getLogger().error(e);
 			request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
@@ -44,14 +52,6 @@ public class ClientSearchScheduleCommand implements Command, Loggable {
 			request.setAttribute(PARAM_TIME, LocalTime.NOON);
 			return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
 		} 
-		List<Schedule> find = scheduleService.findFreeOnDayAndTime(date, time);
-		Map<Integer, Schedule> collect = find.stream().collect(Collectors.toMap(Schedule::getId, Function.identity()));
-		getLogger().info(collect);
-		request.getSession().setAttribute(ATTRIBUTE_SCHEDULES, collect);
-		request.setAttribute(PARAM_SCHEDULES, find);
-		request.setAttribute(PARAM_DATE, date);
-		request.setAttribute(PARAM_TIME, time);
-		return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;
 	}
 
 }

@@ -61,6 +61,9 @@ BEGIN
   IF NEW.sc_start_time < '8:00' OR NEW.sc_end_time  > '20:00' THEN
      RAISE EXCEPTION 'schedule_wrong_working_hours';
   END IF;
+  IF EXISTS (SELECT * FROM schedule_t WHERE sc_master_id = NEW.sc_master_id AND sc_day = NEW.sc_day) THEN
+     RAISE EXCEPTION 'schedule_occupied_day';
+  END IF;
   RETURN new;
 END;
 $$ LANGUAGE PLPGSQL;

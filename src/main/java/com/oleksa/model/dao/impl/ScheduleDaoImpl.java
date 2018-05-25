@@ -3,7 +3,6 @@ package com.oleksa.model.dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -136,8 +135,8 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
 		int offset = page * itemsOnPage;
 		try(Connection connection = dataSource.getConnection()) {
 			connection.setAutoCommit(false);
-			try (Statement statement = connection.createStatement();
-	            ResultSet resultSet = statement.executeQuery(SC_SELECT_COUNT.getValue());) {
+			try (PreparedStatement statement = connection.prepareStatement(SC_SELECT_COUNT.getValue());
+	            ResultSet resultSet = statement.executeQuery();) {
 					if (resultSet.next()) {
 						total = resultSet.getInt(1);
 					} else {
@@ -155,6 +154,20 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
                         }
                     }
         		}
+			for (Schedule schedule : items) {
+				schedule.initFreeHours();
+				try (PreparedStatement statement = connection.prepareStatement(SC_SELECT_OCCUPIED_HOURS_BY_ID.getValue());
+		                ) {
+					statement.setInt(1, schedule.getId());
+					try(ResultSet resultSet = statement.executeQuery();) {
+            			while(resultSet.next()) {
+                            LocalTime occupiedTime = resultSet.getTime(1).toLocalTime();
+                            schedule.getFreeHours().remove(occupiedTime);
+                        }
+                    }
+				}
+			}
+			getLogger().info(items);
 			connection.commit();
 		} catch (SQLException e) {
             getLogger().error(e);
@@ -179,7 +192,6 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
             }
 		} catch (SQLException e) {
 			getLogger().error(e);
-			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 		return result;

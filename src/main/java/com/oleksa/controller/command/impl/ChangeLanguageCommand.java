@@ -16,7 +16,7 @@ public class ChangeLanguageCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         String langParam = request.getParameter(PARAM_LANG);
-        if(Objects.nonNull(langParam) && LanguageParamHolder.LANGS.contains(langParam)) {
+        if (Objects.nonNull(langParam) && LanguageParamHolder.LANGS.contains(langParam)) {
         	request.getSession().setAttribute(PARAM_LANG, langParam);
         }
         return PAGE_REDIRECT + URL_INDEX;

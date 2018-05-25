@@ -10,8 +10,8 @@
     
 	<form method="post" action="${pageContext.request.contextPath}/master/create_schedule">
         <fmt:message key="date"/> <input type="date" name="date" value=""> <br/>
-        <fmt:message key="start_time"/> <input type="time" name="start_time" step="3600" value=""/> <br/>
-        <fmt:message key="finish_time"/> <input type="time" name="finish_time" step="3600" value=""/> <br/>
+        <fmt:message key="startHour"/> <input type="time" name="start_time" step="3600" value=""/> <br/>
+        <fmt:message key="endHour"/> <input type="time" name="finish_time" step="3600" value=""/> <br/>
         <input class="button" type="submit" value="<fmt:message key="page.create"/>">
    	</form>
     

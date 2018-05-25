@@ -44,7 +44,8 @@ import static com.oleksa.controller.constants.MessagesConstants.*;
  *
  */
 public final class SalonServlet extends HttpServlet {
-    
+	private static final long serialVersionUID = 4389426352834378054L;
+
 	private static final Logger LOGGER = LogManager.getLogger(SalonServlet.class);
 	
     private final Map<String, Command> commands;
@@ -88,7 +89,6 @@ public final class SalonServlet extends HttpServlet {
         commands.put(PAGE_CLIENT_SEARCH_SCHEDULE, r -> SERVERPAGE_CLIENT_SEARCH_SCHEDULE);
         commands.put(PAGE_MASTER, r -> SERVERPAGE_MASTER);
         commands.put(PAGE_MASTER_CREATE_SCHEDULE, r -> SERVERPAGE_MASTER_CREATE_SCHEDULE);
-        
     }
     
     @Override
@@ -105,8 +105,7 @@ public final class SalonServlet extends HttpServlet {
             throws ServletException, IOException {
         String path = request.getRequestURI();
         LOGGER.info("request uri: " + path);
-//        Command command = commands.getOrDefault(path.replaceAll("/BeautySalon/", ""), r -> SERVERPAGE_INDEX);
-        Command command = commands.getOrDefault(path, new IndexCommand(serviceFactory.getScheduleService()));
+		Command command = commands.getOrDefault(path.replaceAll(URL_CONTEXT, ""), new IndexCommand(serviceFactory.getScheduleService()));
         String page = command.execute(request);
         if (page.contains(PAGE_REDIRECT)) {
             response.sendRedirect(page.replace(PAGE_REDIRECT, ""));

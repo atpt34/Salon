@@ -28,38 +28,37 @@ public class ClientCommentCommand implements Command, Loggable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
-		String text = request.getParameter(PARAM_TEXT);
-		String stars = request.getParameter(PARAM_STARS);
-		String idParam = request.getParameter(PARAM_ID);
-		int id;
 		try {
-			id = ValidatorUtil.parseIdParameter(idParam);
+			String text = request.getParameter(PARAM_TEXT);
+			String stars = request.getParameter(PARAM_STARS);
+			String idParam = request.getParameter(PARAM_ID);
+			int id = ValidatorUtil.parseIdParameter(idParam);
+			List<Record> found = (List<Record>) request.getSession().getAttribute(ATTRIBUTE_RECORDS);
+			if (Objects.isNull(found) || found.isEmpty()) {
+				return handleNoSearch(request);
+			}
+			Comment comment = new Comment(null, 
+					ValidatorUtil.parseTextParameter(text), ValidatorUtil.parseStarsParameter(stars));
+			Optional<Record> first = found.stream().filter(k -> k.getId().equals(id)).findFirst();
+			if (!first.isPresent()) {
+				return handleNoSearch(request);
+			}
+			Record record = first.get();
+			Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
+			record.setClient(client.get());
+			record.setComment(comment);
+			recordService.update(record);
+			request.getSession().removeAttribute(ATTRIBUTE_RECORDS);
+			return PAGE_REDIRECT + PAGE_CLIENT;
 		} catch (UnparsableIdException e) {
-			getLogger().error(MSG_NO_CHOSEN_RECORDS);
-			request.setAttribute(PARAM_ERROR, MSG_NO_CHOSEN_RECORDS);
-			return SERVERPAGE_CLIENT;
+			return handleNoSearch(request);
 		}
-		List<Record> found = (List<Record>) request.getSession().getAttribute(ATTRIBUTE_RECORDS);
-		if (Objects.isNull(found) || found.isEmpty()) {
-			getLogger().error(MSG_NO_CHOSEN_RECORDS);
-			request.setAttribute(PARAM_ERROR, MSG_NO_CHOSEN_RECORDS);
-			return SERVERPAGE_CLIENT;
-		}
-		Comment comment = new Comment(null, 
-				ValidatorUtil.parseTextParameter(text), ValidatorUtil.parseStarsParameter(stars));
-		Optional<Record> first = found.stream().filter(k -> k.getId().equals(id)).findFirst();
-		if (!first.isPresent()) {
-			getLogger().error(MSG_NO_CHOSEN_RECORDS);
-			request.setAttribute(PARAM_ERROR, MSG_NO_CHOSEN_RECORDS);
-			return SERVERPAGE_CLIENT;
-		}
-		Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
-		Record record = first.get();
-		record.setClient(client.get());
-		record.setComment(comment);
-		recordService.update(record);
-		request.getSession().removeAttribute(ATTRIBUTE_RECORDS);
-		return PAGE_REDIRECT + PAGE_CLIENT;
+	}
+
+	private String handleNoSearch(HttpServletRequest request) {
+		getLogger().error(MSG_NO_CHOSEN_RECORDS);
+		request.setAttribute(PARAM_ERROR, MSG_NO_CHOSEN_RECORDS);
+		return PARENT_DIR + SERVERPAGE_CLIENT;
 	}
 
 }

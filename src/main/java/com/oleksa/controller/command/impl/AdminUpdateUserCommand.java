@@ -28,8 +28,8 @@ public class AdminUpdateUserCommand implements Command, Loggable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
-		String idParam = request.getParameter(PARAM_ID);
 		try {
+			String idParam = request.getParameter(PARAM_ID);
 			int id = ValidatorUtil.parseIdParameter(idParam);
 			List<User> found = (List<User>) request.getSession().getAttribute(ATTRIBUTE_USERS);
 			if (Objects.isNull(found)) {
@@ -45,13 +45,10 @@ public class AdminUpdateUserCommand implements Command, Loggable {
 			userService.update(first.get());
 			request.getSession().removeAttribute(ATTRIBUTE_USERS);
 		} catch (UnparsableIdException e) {
-			e.printStackTrace();
 			getLogger().error(e);
 		} catch (NotUniqueNameException e) {
-			e.printStackTrace();
 			getLogger().error(e);
 		} catch (NotUniqueEmailException e) {
-			e.printStackTrace();
 			getLogger().error(e);
 		}
 		return PAGE_REDIRECT + PAGE_ADMIN;

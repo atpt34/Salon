@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import com.oleksa.controller.command.Command;
@@ -26,25 +27,29 @@ public class MasterDeleteScheduleCommand implements Command, Loggable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String execute(HttpServletRequest request) {
-		String parameter = request.getParameter(PARAM_ID);
 		try {
+			String parameter = request.getParameter(PARAM_ID);
 			int id = ValidatorUtil.parseIdParameter(parameter);
 			List<Schedule> found = (List<Schedule>) request.getSession().getAttribute(ATTRIBUTE_SCHEDULES);
 			if (Objects.isNull(found) || found.isEmpty()) {
-				getLogger().error(MSG_NO_PREV_SEARCH);
-				return SERVERPAGE_MASTER_SCHEDULES;
+				return handleException(request);
 			}
 			Optional<Schedule> schedule = found.stream().filter(k -> k.getId().equals(id) ).findFirst();
 			if (!schedule.isPresent()) {
-				getLogger().error(MSG_NO_PREV_SEARCH);
-				return SERVERPAGE_MASTER_SCHEDULES;
+				return handleException(request);
 			}
 			scheduleService.delete(schedule.get());
 			request.getSession().removeAttribute(ATTRIBUTE_SCHEDULES);
+			return PAGE_REDIRECT + PAGE_MASTER;
 		} catch (UnparsableIdException e) {
-			getLogger().error(MSG_NO_PREV_SEARCH);
+			return handleException(request);
 		}
-		return PAGE_REDIRECT + PAGE_MASTER;
+	}
+
+	private String handleException(HttpServletRequest request) {
+		getLogger().error(MSG_NO_PREV_SEARCH);
+		request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
+		return PARENT_DIR + SERVERPAGE_MASTER;
 	}
 
 }
