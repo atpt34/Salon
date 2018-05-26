@@ -31,22 +31,22 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
     public List<User> findAll() {
         return super.findAll(US_SELECT_ALL.getValue(), JdbcMapperImpl::mapToUser);
     }
-    
+
     @Override
     public Optional<User> findByName(String name) {
         return super.findByName(US_SELECT_BY_NAME.getValue(), JdbcMapperImpl::mapToUser, name);
     }
-    
+
     @Override
     public Optional<User> findByEmail(String email) {
         return super.findByName(US_SELECT_BY_EMAIL.getValue(), JdbcMapperImpl::mapToUser, email);
     }
-    
+
     @Override
     public void deleteById(Integer id) {
         super.deleteById(US_DELETE_BY_ID.getValue(), id);
     }
-    
+
     private static void prepareInsert(User t, PreparedStatement statement) {
         try {
             statement.setString(1, t.getName());
@@ -67,7 +67,7 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
             u.setId(id);
             return u;
         } catch (SQLException e) {
-        	getLogger().error(e);
+            getLogger().error(e);
             String message = e.getMessage();
             if(message.contains(US_NAME_UNIQUE.getValue())) {
                 throw new NotUniqueNameException();
@@ -78,7 +78,7 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
             throw new RuntimeException(e);
         }
     }
-    
+
     private static void prepareUpdate(User t, PreparedStatement statement) {
         try {
             statement.setString(1, t.getName());
@@ -91,14 +91,14 @@ public class UserDaoImpl extends JdbcTemplate<User> implements UserDao {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public User update(User u) throws NotUniqueNameException, NotUniqueEmailException {
         try {
             super.update(u, US_UPDATE.getValue(), UserDaoImpl::prepareUpdate);
             return u;
         } catch (SQLException e) {
-        	getLogger().error(e);
+            getLogger().error(e);
             String message = e.getMessage();
             if(message.contains(US_NAME_UNIQUE.getValue())) {
                 throw new NotUniqueNameException();

@@ -14,18 +14,26 @@ import com.oleksa.model.service.UserService;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
+/**
+ * Tries to register new user of application.
+ * If successful new user registered with client role and 
+ * client's home page returned.
+ * 
+ * @author atpt34
+ *
+ */
 public final class RegisterCommand implements Command, Loggable {
 
     private UserService service;
-    
-    public RegisterCommand(UserService userService) {
-    	this.service = userService;
-	}
 
-	@Override
+    public RegisterCommand(UserService userService) {
+        this.service = userService;
+    }
+
+    @Override
     public String execute(HttpServletRequest request) {
         try {
-        	if (CommandUtil.isUserLogged(request)) {
+            if (CommandUtil.isUserLogged(request)) {
                 request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);
                 return PAGE_LOGIN;
             }

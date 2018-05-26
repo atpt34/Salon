@@ -1,5 +1,11 @@
 package com.oleksa.controller.exception;
 
+/**
+ * Indicates absence of rights to resource.
+ * 
+ * @author atpt34
+ *
+ */
 public class AccessDeniedException extends RuntimeException {
 
     public AccessDeniedException() {

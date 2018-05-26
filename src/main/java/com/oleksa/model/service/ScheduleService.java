@@ -9,18 +9,23 @@ import com.oleksa.model.entity.User;
 import com.oleksa.model.exception.InvalidIntervalException;
 import com.oleksa.model.pagination.PaginationResult;
 
+/**
+ * 
+ * @author atpt34
+ *
+ */
 public interface ScheduleService {
-	
-	Schedule create(Schedule schedule) throws InvalidIntervalException;
-	
-	List<Schedule> findAll();
-	
-	List<Schedule> findAllByMaster(User master);
 
-	PaginationResult<Schedule> findPage(int page);
-	
-	List<Schedule> findFreeOnDayAndTime(LocalDate day, LocalTime time);
+    Schedule create(Schedule schedule) throws InvalidIntervalException;
 
-	void delete(Schedule schedule);
+    List<Schedule> findAll();
+
+    List<Schedule> findAllByMaster(User master);
+
+    PaginationResult<Schedule> findPage(int page);
+
+    List<Schedule> findFreeOnDayAndTime(LocalDate day, LocalTime time);
+
+    void delete(Schedule schedule);
 
 }

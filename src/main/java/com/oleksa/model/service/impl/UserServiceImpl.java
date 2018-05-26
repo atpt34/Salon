@@ -11,10 +11,15 @@ import com.oleksa.model.exception.NotUniqueEmailException;
 import com.oleksa.model.exception.NotUniqueNameException;
 import com.oleksa.model.service.UserService;
 
+/**
+ * 
+ * @author atpt34
+ *
+ */
 public class UserServiceImpl implements UserService {
-    
+
     private UserDao userDao;
-    
+
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -37,25 +42,24 @@ public class UserServiceImpl implements UserService {
         return userDao.create(user);
     }
 
-	@Override
-	public List<User> findAll() {
-		return userDao.findAll();
-	}
+    @Override
+    public List<User> findAll() {
+        return userDao.findAll();
+    }
 
-	@Override
-	public User update(User user) throws NotUniqueNameException, NotUniqueEmailException {
-		return updateToMaster(user);
-	}
+    @Override
+    public User update(User user) throws NotUniqueNameException, NotUniqueEmailException {
+        return updateToMaster(user);
+    }
 
-	private User updateToMaster(User user) throws NotUniqueNameException, NotUniqueEmailException {
-		user.setRole(UserRole.MASTER);
-		return userDao.update(user);
-	}
+    private User updateToMaster(User user) throws NotUniqueNameException, NotUniqueEmailException {
+        user.setRole(UserRole.MASTER);
+        return userDao.update(user);
+    }
 
-	@Override
-	public void delete(User user) {
-		userDao.deleteById(user.getId());
-	}
-
+    @Override
+    public void delete(User user) {
+        userDao.deleteById(user.getId());
+    }
 
 }

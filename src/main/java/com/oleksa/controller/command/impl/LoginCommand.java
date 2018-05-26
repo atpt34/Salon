@@ -15,18 +15,25 @@ import static com.oleksa.controller.constants.MessagesConstants.*;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * Manages user's login operation 
+ * and if successful returns role dashboard page.
+ * 
+ * @author atpt34
+ *
+ */
 public final class LoginCommand implements Command {
-    
+
     private UserService service;
-    
+
     public LoginCommand(UserService service) {
-    	this.service = service;
-	}
+        this.service = service;
+    }
 
     @Override
     public String execute(HttpServletRequest request) {
         try {
-        	if (CommandUtil.isUserLogged(request)) {
+            if (CommandUtil.isUserLogged(request)) {
                 request.setAttribute(PARAM_ERROR, MSG_ALREADY_LOGIN);
                 return PAGE_LOGIN;
             }

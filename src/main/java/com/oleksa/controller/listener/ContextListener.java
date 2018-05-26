@@ -10,6 +10,12 @@ import javax.servlet.ServletContextListener;
 
 import com.oleksa.model.entity.User;
 
+/**
+ * Init context attribute for holding logged users.
+ * 
+ * @author atpt34
+ *
+ */
 public class ContextListener implements ServletContextListener {
 
     @Override
@@ -20,7 +26,7 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        
+
     }
 
 }

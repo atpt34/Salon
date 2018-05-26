@@ -15,26 +15,32 @@ import static com.oleksa.controller.constants.MessagesConstants.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Return index page of application with available schedules data.
+ * 
+ * @author atpt34
+ *
+ */
 public class IndexCommand implements Command, Loggable {
 
-	private ScheduleService scheduleService;
+    private ScheduleService scheduleService;
 
-	public IndexCommand(ScheduleService scheduleService) {
-		this.scheduleService = scheduleService;
-	}
+    public IndexCommand(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
+    }
 
-	@Override
-	public String execute(HttpServletRequest request) {
-		String pageParam = request.getParameter(PARAM_PAGE);
-		int page = ValidatorUtil.parsePageParameter(pageParam);
-		PaginationResult<Schedule> pageResult = scheduleService.findPage(page);
-		getLogger().debug(pageResult);
-		Map<User, List<Schedule>> collect = pageResult.getGroupedItems(Schedule::getMaster);
-		getLogger().debug(collect);
-		request.setAttribute(PARAM_SCHEDULES, collect);
-		request.setAttribute(PARAM_TOTAL_PAGES, pageResult.getTotalPages());
-		request.setAttribute(PARAM_PAGE, pageResult.getPage());
-		return SERVERPAGE_INDEX;
-	}
+    @Override
+    public String execute(HttpServletRequest request) {
+        String pageParam = request.getParameter(PARAM_PAGE);
+        int page = ValidatorUtil.parsePageParameter(pageParam);
+        PaginationResult<Schedule> pageResult = scheduleService.findPage(page);
+        getLogger().debug(pageResult);
+        Map<User, List<Schedule>> collect = pageResult.getGroupedItems(Schedule::getMaster);
+        getLogger().debug(collect);
+        request.setAttribute(PARAM_SCHEDULES, collect);
+        request.setAttribute(PARAM_TOTAL_PAGES, pageResult.getTotalPages());
+        request.setAttribute(PARAM_PAGE, pageResult.getPage());
+        return SERVERPAGE_INDEX;
+    }
 
 }

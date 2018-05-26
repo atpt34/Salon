@@ -14,15 +14,20 @@ import com.oleksa.model.entity.User;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
+/**
+ * 
+ * @author atpt34
+ *
+ */
 public class SessionListener implements HttpSessionListener {
 
-	private static final Logger LOGGER = LogManager.getLogger(SessionListener.class);
-	
+    private static final Logger LOGGER = LogManager.getLogger(SessionListener.class);
+
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
         HttpSession session = httpSessionEvent.getSession();
         session.setAttribute(PARAM_USER, Optional.empty());
-        
+
     }
 
     @SuppressWarnings("unchecked")

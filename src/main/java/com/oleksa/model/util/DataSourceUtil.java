@@ -9,16 +9,22 @@ import javax.sql.DataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Creates DataSource connection pool to database.
+ * 
+ * @author atpt34
+ *
+ */
 public class DataSourceUtil {
 
-	private static final Logger LOGGER = LogManager.getLogger(DataSourceUtil.class);
-	
+    private static final Logger LOGGER = LogManager.getLogger(DataSourceUtil.class);
+
     private static DataSource dataSource;
-    
+
     static {
         dataSource = Objects.requireNonNull(initDataSource());
     }
-    
+
     private static DataSource initDataSource() {
         try {
             InitialContext initContext = new InitialContext();
@@ -30,9 +36,9 @@ public class DataSourceUtil {
             throw new RuntimeException(e);
         }
     }
-    
+
     private DataSourceUtil() { } 
-    
+
     public static DataSource getDataSource() {
         return dataSource;
     }

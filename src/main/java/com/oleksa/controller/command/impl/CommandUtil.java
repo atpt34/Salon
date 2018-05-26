@@ -14,10 +14,17 @@ import com.oleksa.model.entity.User;
 import com.oleksa.model.entity.UserRole;
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
+/**
+ * Utility class to manage user's logging
+ * session and context data.  
+ * 
+ * @author atpt34
+ *
+ */
 public final class CommandUtil {
 
-	private static final Logger LOGGER = LogManager.getLogger(CommandUtil.class);
-	
+    private static final Logger LOGGER = LogManager.getLogger(CommandUtil.class);
+
     private CommandUtil() { }
 
     public static boolean setLoggedUser(HttpServletRequest request, User user) {
@@ -45,7 +52,7 @@ public final class CommandUtil {
             LOGGER.info("logged users: " + getLoggedUsers(request));
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     private static Set<String> getLoggedUsers(HttpServletRequest request) {
         return (Set<String>) request.getSession().getServletContext()

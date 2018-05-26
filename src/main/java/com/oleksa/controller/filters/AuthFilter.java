@@ -23,13 +23,19 @@ import com.oleksa.model.logger.Loggable;
 
 import static com.oleksa.controller.constants.MessagesConstants.*;
 
+/**
+ * Filters requests of users to resources that they have no access rights.
+ *   
+ * @author atpt34
+ *
+ */
 public final class AuthFilter implements Filter, Loggable {
 
-	private static final Map<String, UserRole> MAP = new HashMap<>();
-	
+    private static final Map<String, UserRole> MAP = new HashMap<>();
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-    	MAP.put(FOLDER_ADMIN, UserRole.ADMIN);
+        MAP.put(FOLDER_ADMIN, UserRole.ADMIN);
         MAP.put(FOLDER_CLIENT, UserRole.CLIENT);
         MAP.put(FOLDER_MASTER, UserRole.MASTER);
     }
@@ -47,17 +53,17 @@ public final class AuthFilter implements Filter, Loggable {
         chain.doFilter(request,response);
     }
 
-	private void checkAccess(String path, Optional<User> user) {
-		for (Entry<String, UserRole> entry : MAP.entrySet()) {
-			if (path.contains(entry.getKey()) && (!user.isPresent() || user.get().getRole() != entry.getValue())) {
-	    		  throw new AccessDeniedException(MSG_ACCESS_DENIED); 
-			}
-		}
-	}
+    private void checkAccess(String path, Optional<User> user) {
+        for (Entry<String, UserRole> entry : MAP.entrySet()) {
+            if (path.contains(entry.getKey()) && (!user.isPresent() || user.get().getRole() != entry.getValue())) {
+                throw new AccessDeniedException(MSG_ACCESS_DENIED); 
+            }
+        }
+    }
 
     @Override
     public void destroy() {
-        
+
     }
 
 }

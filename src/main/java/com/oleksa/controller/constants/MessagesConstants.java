@@ -1,5 +1,11 @@
 package com.oleksa.controller.constants;
 
+/**
+ * Common messages constants.
+ * TODO: convert to enum
+ * @author atpt34
+ *
+ */
 public interface MessagesConstants {
 
     String PARAM_PASS = "pass";
@@ -22,18 +28,18 @@ public interface MessagesConstants {
     String PARAM_ID = "id";
     String PARAM_TOTAL_PAGES = "totalPages";
     String PARAM_ERROR = "error";
-    
+
     String PARAM_SCHEDULES = "schedules";
     String PARAM_RECORDS = "records";
     String PARAM_USERS = "users";
-    
+
     String URL_CONTEXT = "/BeautySalon";
     String URL_CHANGE_LANGUAGE = "/changeLanguage";
     String URL_REGISTER = "/register";
     String URL_LOGOUT = "/logout";
     String URL_LOGIN = "/login";
     String URL_INDEX = "/index";
-    
+
     String URL_ADMIN_USERS = "/admin/users";
     String URL_ADMIN_UPDATE_USER = "/admin/update_user";
     String URL_ADMIN_DELETE_USER = "/admin/delete_user";
@@ -46,12 +52,12 @@ public interface MessagesConstants {
     String URL_MASTER_SCHEDULES = "/master/schedules";
     String URL_MASTER_CREATE_SCHEDULE = "/master/create_schedule";
     String URL_MASTER_DELETE_SCHEDULE = "/master/delete_schedule";
-    
+
     String PAGE_REDIRECT = "redirect:";
     String PAGE_LOGIN = "/login_page";
     String PAGE_REGISTER = "/register_page";
     String PAGE_ADMIN = "/admin_page";
-    
+
     String PAGE_MASTER = "/master_page";
     String PAGE_MASTER_CREATE_SCHEDULE = "/master/create_schedule_page";
     String PAGE_CLIENT_CREATE_COMMENT = "/client/create_comment_page";
@@ -66,7 +72,7 @@ public interface MessagesConstants {
     String SERVERPAGE_CLIENT = WEBINF_JSP + "/client/client.jsp";
     String SERVERPAGE_MASTER = WEBINF_JSP + "/master/master.jsp";
     String SERVERPAGE_404 = WEBINF_JSP + "/404.jsp";
-    
+
     String SERVERPAGE_SCHEDULES = WEBINF_JSP + "/schedules.jsp";
     String PARENT_DIR = "../";
     String SERVERPAGE_ADMIN_COMMENTS = PARENT_DIR + WEBINF_JSP + "/admin/comments.jsp";
@@ -80,11 +86,11 @@ public interface MessagesConstants {
     String ATTRIBUTE_SCHEDULES = "attribute_schedules";
     String ATTRIBUTE_RECORDS = "attribute_records";
     String ATTRIBUTE_USERS = "attribute_users";
-    
+
     String FOLDER_ADMIN = "admin";
     String FOLDER_CLIENT = "client";
     String FOLDER_MASTER = "master";
-    
+
     String MSG_ACCESS_DENIED = "error.access.denied";
     String MSG_ALREADY_LOGIN = "error.already.login";
     String MSG_INVALID_INPUT = "error.invalid.input";
@@ -96,5 +102,5 @@ public interface MessagesConstants {
     String MSG_NO_CHOSEN_SCHEDULES = "error.no.chosen.schedules";
     String MSG_NO_CHOSEN_RECORDS = "error.no.chosen.records";
     String MSG_NO_CHOSEN_USERS = "error.no.chosen.users";
-    
+
 }

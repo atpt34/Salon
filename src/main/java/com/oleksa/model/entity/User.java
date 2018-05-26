@@ -2,6 +2,12 @@ package com.oleksa.model.entity;
 
 import java.util.Objects;
 
+/**
+ * Class represents user of application.
+ * 
+ * @author atpt34
+ *
+ */
 public final class User extends AbstractEntity<Integer> {
 
     private String name;
@@ -24,7 +30,7 @@ public final class User extends AbstractEntity<Integer> {
     }
 
     public void setName(String name) {
-    	this.name = Objects.requireNonNull(name);
+        this.name = Objects.requireNonNull(name);
     }
 
     public String getPassword() {
@@ -32,7 +38,7 @@ public final class User extends AbstractEntity<Integer> {
     }
 
     public void setPassword(String password) {
-    	this.password = Objects.requireNonNull(password);
+        this.password = Objects.requireNonNull(password);
     }
 
     public String getEmail() {
@@ -40,7 +46,7 @@ public final class User extends AbstractEntity<Integer> {
     }
 
     public void setEmail(String email) {
-    	this.email = Objects.requireNonNull(email);
+        this.email = Objects.requireNonNull(email);
     }
 
     public String getFullname() {
@@ -56,7 +62,7 @@ public final class User extends AbstractEntity<Integer> {
     }
 
     public void setRole(UserRole role) {
-    	this.role = Objects.requireNonNull(role);
+        this.role = Objects.requireNonNull(role);
     }
 
     @Override
@@ -72,63 +78,63 @@ public final class User extends AbstractEntity<Integer> {
             return false;
         User other = (User) obj;
         return Objects.equals(id, other.id)
-        		&& Objects.equals(name, other.name)
-        		&& Objects.equals(email, other.email)
-        		&& Objects.equals(password, other.password)
-        		&& Objects.equals(fullname, other.fullname)
-        		&& role == other.role;
+                && Objects.equals(name, other.name)
+                && Objects.equals(email, other.email)
+                && Objects.equals(password, other.password)
+                && Objects.equals(fullname, other.fullname)
+                && role == other.role;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("User [id=").append(id).append(", name=").append(name).append(", password=").append(password)
-                .append(", email=").append(email).append(", fullname=").append(fullname).append(", role=").append(role)
-                .append("]");
+        .append(", email=").append(email).append(", fullname=").append(fullname).append(", role=").append(role)
+        .append("]");
         return builder.toString();
     }
-    
+
     public static final class UserBuilder {
-    	
-    	private Integer id;
-    	private String name;
+
+        private Integer id;
+        private String name;
         private String password;
         private String email;
         private String fullname;
         private UserRole role = UserRole.CLIENT;
-        
+
         public UserBuilder setId(Integer id) {
-        	this.id = id;
-        	return this;
+            this.id = id;
+            return this;
         }
-        
+
         public UserBuilder setName(String name) {
-        	this.name = name;
-        	return this;
+            this.name = name;
+            return this;
         }
-        
+
         public UserBuilder setPassword(String pass) {
-        	this.password = pass;
-        	return this;
+            this.password = pass;
+            return this;
         }
-        
+
         public UserBuilder setEmail(String email) {
-        	this.email = email;
-        	return this;
+            this.email = email;
+            return this;
         }
-        
+
         public UserBuilder setFullname(String fullname) {
-        	this.fullname = fullname;
-        	return this;
+            this.fullname = fullname;
+            return this;
         }
-        
+
         public UserBuilder setRole(UserRole role) {
-        	this.role = role;
-        	return this;
+            this.role = role;
+            return this;
         }
-        
+
         public User build() {
-        	return new User(id, name, email, password, role, fullname);
+            return new User(id, name, email, password, role, fullname);
         }
     }
 

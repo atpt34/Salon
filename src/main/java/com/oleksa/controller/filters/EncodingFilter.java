@@ -3,8 +3,13 @@ package com.oleksa.controller.filters;
 import javax.servlet.*;
 import java.io.IOException;
 
+/**
+ * Sets encoding to UTF-8.
+ * @author atpt34
+ *
+ */
 public final class EncodingFilter implements Filter {
-    
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
