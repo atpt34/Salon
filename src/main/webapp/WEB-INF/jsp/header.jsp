@@ -1,4 +1,5 @@
 <%@ include file="tags.jsp" %>
+
 <div align="center" style="border: 1px solid #ccc;padding:5px;margin-bottom:20px;">
    
    <div align="left">
@@ -10,6 +11,10 @@
          </select>
          <input type="submit" value="<fmt:message key="command.set.language" />">
     </form>
+    
+    <fmt:message key="today"/>
+    <ctg:datetag date="${today }" locale="${sessionScope.lang }" />
+    
     </div>
     
     <c:choose>

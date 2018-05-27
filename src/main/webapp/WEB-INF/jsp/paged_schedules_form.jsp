@@ -4,8 +4,9 @@
   <fmt:message key="master"/>: <c:out value="${sc.key.fullname}"/> <br/>
   <fmt:message key="page.schedules"/>: <br/>
   			<c:forEach var="scd" items="${sc.value}">
-	  			 <c:out value="${scd.day }"/>
+	  			 <ctg:datetag date="${scd.day }" locale="${sessionScope.lang }" />
 	  			 <c:out value="${scd.startHour }"/> - <c:out value="${scd.endHour }"/>
+	  			 <c:out value="${scd.freeHours.size() }"/> <fmt:message key="places"/>
 	  			 <div style="color:green"> 
 		  			 <c:forEach var="freeHour" items="${scd.freeHours}">
 		  			 	<c:out value="${freeHour }"/>

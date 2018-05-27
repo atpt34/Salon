@@ -16,11 +16,13 @@
 	<fmt:message key="time"/>
     <input type="time" name="time" step="3600" value="${time }"/>
      <br/><br/>
+     <c:if test="${empty schedules}">
+     	<fmt:message key="search.no.results"/>
+     </c:if>
 	<c:forEach var="sc" items="${schedules}">
 		<input type="checkbox" name="id" value="${sc.id}" />
 		<c:out value="${sc.master.fullname }"/>
 		<c:out value="${sc.master.email }"/>
-		<c:out value="${sc.day }"/>
 		<c:out value="${sc.startHour }"/> - <c:out value="${sc.endHour }"/>
 		<br/>
 	</c:forEach>

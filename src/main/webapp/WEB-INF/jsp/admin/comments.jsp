@@ -5,13 +5,27 @@
 </head>
 <body>
     <jsp:include page="../header.jsp" />
+    
     <h2><fmt:message key="page.comments"/></h2>
-    <c:forEach var="rc" items="${records}">
-    	<c:out value="${rc.client.email}"></c:out>
-    	<c:out value="${rc.comment.text}"></c:out>
-    	<c:out value="${rc.comment.stars}"></c:out>
-    	<br/>
-    </c:forEach>
+    <table border="1">
+    	<thead>
+   		<tr>
+   			<th><fmt:message key="email"/></th>
+   			<th><fmt:message key="stars"/></th>
+   			<th><fmt:message key="text"/></th>
+   		</tr>
+    	</thead>
+    	<tbody>
+    	<c:forEach var="rc" items="${records}">
+    	<tr>
+	   		<td><c:out value="${rc.client.email}"/></td>
+			<td><c:out value="${rc.comment.stars}"/></td>
+	   		<td><c:out value="${rc.comment.text}"/></td>
+   		</tr>
+   		</c:forEach>
+    	</tbody>
+    </table>
+    
     <jsp:include page="../footer.jsp" />
 </body>
 </html>

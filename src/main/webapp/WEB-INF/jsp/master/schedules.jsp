@@ -20,7 +20,7 @@
     	<c:if test="${not empty sc.records}">
 			<fmt:message key="page.occupiedHours"/>: <br/> 
 			<c:forEach var="sc" items="${sc.records }">
-				<c:out value="${sc.hour }"/> <br/>
+				<c:out value="${sc.hour }"/>
 			</c:forEach> 
 		</c:if>
 

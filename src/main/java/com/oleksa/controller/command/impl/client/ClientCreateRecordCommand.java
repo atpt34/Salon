@@ -52,7 +52,7 @@ public class ClientCreateRecordCommand implements Command, Loggable {
                     (Map<Integer, Schedule>) request.getSession().getAttribute(ATTRIBUTE_SCHEDULES);
             if(Objects.isNull(ids) || (ids.length == 0) || Objects.isNull(found) || found.isEmpty()) {
                 getLogger().error(MSG_NO_CHOSEN_SCHEDULES);
-                return handleException(request, LocalTime.NOON, LocalDate.now());
+                return handleException(MSG_NO_CHOSEN_SCHEDULES, request, LocalTime.NOON, LocalDate.now());
             }
             getLogger().debug(Arrays.toString(ids));
             getLogger().debug(found);
@@ -65,7 +65,7 @@ public class ClientCreateRecordCommand implements Command, Loggable {
             }
             if (schedules.isEmpty()) {
                 getLogger().error(MSG_NO_PREV_SEARCH);
-                return handleException(request, LocalTime.NOON, LocalDate.now());
+                return handleException(MSG_NO_CHOSEN_SCHEDULES, request, LocalTime.NOON, LocalDate.now());
             }
             getLogger().debug(schedules);
             Optional<User> client = (Optional<User>) request.getSession().getAttribute(PARAM_USER);
@@ -75,15 +75,15 @@ public class ClientCreateRecordCommand implements Command, Loggable {
             return PAGE_REDIRECT + PAGE_CLIENT;
         } catch (UnparsableTimeParameter | UnparsableDateParameter e) {
             getLogger().error(e);
-            return handleException(request, LocalTime.NOON, LocalDate.now());
+            return handleException(MSG_INVALID_INPUT, request, LocalTime.NOON, LocalDate.now());
         } catch (UnparsableIdException | RecordOccupiedException e) {
             getLogger().error(e);
-            return handleException(request, time, date);
+            return handleException(MSG_RETRY_SEARCH, request, time, date);
         }
     }
 
-    private String handleException(HttpServletRequest request, LocalTime time, LocalDate date) {
-        request.setAttribute(PARAM_ERROR, MSG_RETRY_SEARCH);
+    private String handleException(String message, HttpServletRequest request, LocalTime time, LocalDate date) {
+        request.setAttribute(PARAM_ERROR, message);
         request.setAttribute(PARAM_DATE, date);
         request.setAttribute(PARAM_TIME, time);
         return SERVERPAGE_CLIENT_SEARCH_SCHEDULE;

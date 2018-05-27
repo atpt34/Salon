@@ -91,6 +91,9 @@ public interface MessagesConstants {
     String FOLDER_CLIENT = "client";
     String FOLDER_MASTER = "master";
 
+    String DATE_UA_FORMAT = "dd-MM-yyyy";
+    String DATE_EN_FORMAT = "MM.dd.yyyy";
+    
     String MSG_ACCESS_DENIED = "error.access.denied";
     String MSG_ALREADY_LOGIN = "error.already.login";
     String MSG_INVALID_INPUT = "error.invalid.input";

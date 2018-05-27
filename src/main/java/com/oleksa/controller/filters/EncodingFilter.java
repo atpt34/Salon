@@ -2,6 +2,7 @@ package com.oleksa.controller.filters;
 
 import javax.servlet.*;
 import java.io.IOException;
+import java.time.LocalDate;
 
 /**
  * Sets encoding to UTF-8.
@@ -20,6 +21,7 @@ public final class EncodingFilter implements Filter {
         servletResponse.setContentType("text/html");
         servletResponse.setCharacterEncoding("UTF-8");
         servletRequest.setCharacterEncoding("UTF-8");
+        servletRequest.setAttribute("today", LocalDate.now());
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
