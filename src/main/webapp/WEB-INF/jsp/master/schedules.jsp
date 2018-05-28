@@ -7,6 +7,9 @@
     <jsp:include page="../header.jsp" />
     
     <h1><fmt:message key="page.schedules"/></h1>
+    <c:if test="${empty schedules }">
+	    <fmt:message key="search.no.results"/>
+    </c:if>
 	<c:forEach var="sc" items="${schedules}">
 		<fmt:message key="page.schedule"/>: 
 		<c:out value="${sc.day }"/> 

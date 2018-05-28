@@ -22,6 +22,7 @@
 	    	<td><c:out value="${user.name }"/></td>
 	    	<td><c:out value="${user.fullname }"/></td>
 	    	<td><c:out value="${user.role }"/></td>
+	    	<c:if test="${user.name != sessionScope.user.get().name }">
 	    	<td><c:url value="/admin/update_user" var="href">
 	    		<c:param name="id" value="${user.id }"/>
 	    	</c:url>
@@ -30,6 +31,7 @@
 	    		<c:param name="id" value="${user.id }"/>
 	    	</c:url>
 	    	<a href="${href2}"><fmt:message key="page.delete"/></a></td>
+	    	</c:if>
     	</tr>
    		</c:forEach>
     	</tbody>

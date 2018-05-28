@@ -7,6 +7,9 @@
     <jsp:include page="../header.jsp" />
     
     <h2><fmt:message key="page.records"/></h2>
+    <c:if test="${empty records }">
+	    <fmt:message key="search.no.results"/>
+    </c:if>
     <c:forEach var="rc" items="${records}">
 		<c:out value="${rc.day}"/>  <c:out value="${rc.hour}"/> 
 		<a href="${pageContext.request.contextPath}/client/delete_record?id=${rc.id}" ><fmt:message key="page.delete"/></a>
@@ -14,7 +17,6 @@
 		<c:forEach var="sc" items="${rc.schedules }">
 		  <c:out value="${sc.master.fullname }"/>  <br/> 
 		</c:forEach>
-		
 		
 		<c:if test="${rc.comment == null}">
 			<form method="post" action="${pageContext.request.contextPath}/client/create_comment">

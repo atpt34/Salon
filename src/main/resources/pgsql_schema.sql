@@ -17,6 +17,11 @@ CREATE TABLE user_t (
 );
 ALTER TABLE user_t ADD CONSTRAINT user_pk PRIMARY KEY(us_id);
 CREATE UNIQUE INDEX us_email_un ON user_t (us_email);
+
+-- create admin
+INSERT INTO "user_t" ("us_password", "us_role", "us_email", "us_full_name", "us_name")
+VALUES ('123456', 'admin', 'atpt34@gmail.com', 'Tretinichenko Oleksii', 'Oleksa');
+
 CREATE TABLE record_t (
 	rc_id serial NOT NULL,
 	rc_client_id int4 NOT NULL,
