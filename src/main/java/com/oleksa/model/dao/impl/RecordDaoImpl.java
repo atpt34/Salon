@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(RC_SELECT_ALL_WITH_MASTER_COMMENT.getValue());
                 ) {
-            Map<Record, Set<Schedule>> result = new HashMap<>();
+            Map<Record, Set<Schedule>> result = new LinkedHashMap<>();
             statement.setInt(1, clientId);
             try(ResultSet resultSet = statement.executeQuery();) {
                 Map<Integer, Schedule> schedules = new HashMap<>();

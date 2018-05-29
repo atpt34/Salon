@@ -32,7 +32,7 @@
 	<a href="<c:url value="/index?page=${page + 2}"/>" >
 		 &gt;
 	</a>
-	<a href="<c:url value="/index?page=${totalPages - 1}"/>" >
+	<a href="<c:url value="/index?page=${totalPages}"/>" >
 		 &gt;&gt;
 	</a>
 </c:if>

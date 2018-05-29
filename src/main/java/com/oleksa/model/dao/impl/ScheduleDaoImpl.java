@@ -10,7 +10,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -105,13 +106,13 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(SC_SELECT_BY_MASTER_WITH_RECORDS.getValue());
                 ) {
-            Map<Schedule, Set<Record>> result = new HashMap<>();
+            Map<Schedule, Set<Record>> result = new LinkedHashMap<>();
             statement.setInt(1, masterId);
             try(ResultSet resultSet = statement.executeQuery();) {
                 Map<Integer, Record> records = new HashMap<>();
                 while(resultSet.next()) {
                     Schedule schedule = JdbcMapperImpl.mapToSchedule(resultSet);
-                    result.putIfAbsent(schedule, new HashSet<>());
+                    result.putIfAbsent(schedule, new LinkedHashSet<>());
                     if (resultSet.getInt(RC_ID.getValue()) != 0) {
                         Record record = JdbcMapperImpl.mapToRecord(resultSet);
                         int recordId = record.getId();
@@ -144,7 +145,7 @@ public class ScheduleDaoImpl extends JdbcTemplate<Schedule> implements ScheduleD
                     throw new RuntimeException("no count");
                 }
             }
-            Map<Integer, Schedule> result = new HashMap<>();
+            Map<Integer, Schedule> result = new LinkedHashMap<>();
             try (PreparedStatement statement = connection.prepareStatement(SC_SELECT_LIMIT.getValue());
                     ) {
                 statement.setInt(1, itemsOnPage);
