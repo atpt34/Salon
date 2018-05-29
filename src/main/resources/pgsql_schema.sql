@@ -98,9 +98,6 @@ BEGIN
   IF record_time > schedule_finish OR record_time < schedule_start THEN
     RAISE EXCEPTION 'record_wrong_time';
   END IF;
-  IF EXISTS (SELECT * FROM schedule_occupied_time_t WHERE so_sc_id = NEW.sr_sc_id AND so_time = record_time) THEN
-     RAISE EXCEPTION 'record_occupied';
-  END IF;
   INSERT INTO schedule_occupied_time_t(so_sc_id, so_time) VALUES (NEW.sr_sc_id, record_time);
   RETURN NEW;
 END;
@@ -138,4 +135,27 @@ CREATE TRIGGER delete_schedule_trigger BEFORE DELETE ON schedule_t
 FOR EACH ROW
 EXECUTE PROCEDURE delete_schedule();
 
+/*
+  Sample transactions:
+
+  BEGIN;
+  --SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+  --SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+  --SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+  INSERT INTO "record_t" ("rc_id", "rc_client_id", "rc_start_time", "rc_comment_id", "rc_day") VALUES (1000, 18, '15:00', NULL, '27-05-2018');
+  INSERT INTO "schedule_record_m2m" ("sr_sc_id", "sr_rc_id") VALUES (11, 1000);
+  SELECT PG_SLEEP(5);
+  COMMIT;
+
+  BEGIN;
+  --SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+  --SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+  --SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+  INSERT INTO "record_t" ("rc_id", "rc_client_id", "rc_start_time", "rc_comment_id", "rc_day") VALUES (1001, 18, '15:00', NULL, '27-05-2018');
+  INSERT INTO "schedule_record_m2m" ("sr_sc_id", "sr_rc_id") VALUES (11, 1001);
+  COMMIT;
+
+  DELETE record_t WHERE rc_id  IN (1000, 1001);
+  SELECT * FROM record_t WHERE rc_id  IN (1000, 1001);
+*/
 
