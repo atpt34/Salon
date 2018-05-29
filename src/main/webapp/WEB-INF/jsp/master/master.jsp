@@ -8,7 +8,7 @@
     
     <jsp:include page="../error_tag.jsp" />
     
-    <h1><fmt:message key="hello"/><fmt:message key="master"/> ${sessionScope.user.get().fullname}</h1>
+    <h1><fmt:message key="hello"/><fmt:message key="master"/> <c:out value="${sessionScope.user.get().fullname}"/> </h1>
     
     <p> <a href="${pageContext.request.contextPath}/master/schedules" ><fmt:message key="page.schedules"/></a> </p>
     <p> <a href="${pageContext.request.contextPath}/master/create_schedule_page" ><fmt:message key="page.createSchedule"/></a> </p>

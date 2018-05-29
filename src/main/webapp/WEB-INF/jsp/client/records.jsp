@@ -11,7 +11,7 @@
 	    <fmt:message key="search.no.results"/>
     </c:if>
     <c:forEach var="rc" items="${records}">
-		<c:out value="${rc.day}"/>  <c:out value="${rc.hour}"/> 
+		<ctg:datetag date="${rc.day }" locale="${sessionScope.lang }" /> <c:out value="${rc.hour}"/> 
 		<a href="${pageContext.request.contextPath}/client/delete_record?id=${rc.id}" ><fmt:message key="page.delete"/></a>
 		<br/>
 		<c:forEach var="sc" items="${rc.schedules }">
@@ -27,7 +27,7 @@
 	    	</form>
 		</c:if> 
 		<c:if test="${rc.comment != null}">
-			<c:out value="${rc.comment.text }"/> 
+			<c:out value="${rc.comment.text }"/>
 			<c:out value="${rc.comment.stars }"/> <br/>
 		</c:if> 
 		<br/>

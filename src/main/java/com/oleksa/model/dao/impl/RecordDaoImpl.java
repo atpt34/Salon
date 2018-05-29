@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +51,7 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
         try(Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
             int recordId = 0;
-            try(PreparedStatement statement = connection.prepareStatement(RC_INSERT.getValue(), Statement.RETURN_GENERATED_KEYS);) {
+            try(PreparedStatement statement = connection.prepareStatement(RC_INSERT.getValue(), PreparedStatement.RETURN_GENERATED_KEYS);) {
                 prepareInsert(t, statement);
                 statement.executeUpdate();
                 try (ResultSet keys = statement.getGeneratedKeys()) {
@@ -92,7 +91,7 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
     public Record update(Record record) throws Exception {
         try(Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
-            try(PreparedStatement statement = connection.prepareStatement(CM_INSERT.getValue(), Statement.RETURN_GENERATED_KEYS);) {
+            try(PreparedStatement statement = connection.prepareStatement(CM_INSERT.getValue(), PreparedStatement.RETURN_GENERATED_KEYS);) {
                 Comment comment = record.getComment();
                 statement.setString(1, comment.getText());
                 statement.setInt(2, comment.getStars());
@@ -106,7 +105,7 @@ public class RecordDaoImpl extends JdbcTemplate<Record> implements RecordDao {
                     }
                 }
             }
-            try(PreparedStatement statement = connection.prepareStatement(RC_UPDATE.getValue(), Statement.RETURN_GENERATED_KEYS);) {
+            try(PreparedStatement statement = connection.prepareStatement(RC_UPDATE.getValue(), PreparedStatement.RETURN_GENERATED_KEYS);) {
                 Comment comment = record.getComment();
                 statement.setInt(1, record.getClient().getId());
                 statement.setTime(2, Time.valueOf(record.getHour()));

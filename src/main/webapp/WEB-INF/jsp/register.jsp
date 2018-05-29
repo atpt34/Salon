@@ -9,10 +9,10 @@
     
     <h1><fmt:message key="page.register"/></h1>
     <form method="post" action="${pageContext.request.contextPath}/register">
-        <fmt:message key="name"/><input type="text" name="name"><br/>
-        <fmt:message key="pass"/><input type="password" name="pass"><br/>
-        <fmt:message key="email"/><input type="text" name="email"><br/>
-        <fmt:message key="fullname"/><input type="text" name="fullname"><br/>
+        <fmt:message key="name"/><input type="text" name="name" ><fmt:message key="minchars"/><br/>
+        <fmt:message key="pass"/><input type="password" name="pass" ><fmt:message key="minchars"/><br/>
+        <fmt:message key="email"/><input type="text" name="email" ><br/>
+        <fmt:message key="fullname"/><input type="text" name="fullname" ><br/>
        <input class="button" type="submit" value="<fmt:message key="page.register"/>">
     </form>
     

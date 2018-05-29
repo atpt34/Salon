@@ -12,7 +12,7 @@
     </c:if>
 	<c:forEach var="sc" items="${schedules}">
 		<fmt:message key="page.schedule"/>: 
-		<c:out value="${sc.day }"/> 
+		<ctg:datetag date="${sc.day }" locale="${sessionScope.lang }" />
 		<c:out value="${sc.startHour }"/> - <c:out value="${sc.endHour }"/>
 		<c:url value="/master/delete_schedule" var="href2">
     		<c:param name="id" value="${sc.id }"/>

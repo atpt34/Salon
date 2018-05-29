@@ -4,7 +4,7 @@
    
    <div align="left">
     <a href="<c:url value="/index" />" ><fmt:message key="page.index"/></a> 
-    <form method="GET" action="${pageContext.request.contextPath}/changeLanguage">
+    <form method="GET" action="<c:url value="/changeLanguage"/>">
          <select name="lang" size="1">
             <option value="en"> en </option>
             <option value="ua"> ua </option>

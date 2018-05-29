@@ -18,9 +18,21 @@
   		<br/>
 </c:forEach>
 
-<fmt:message key="page.pages"/>	
-<c:forEach var="i" begin="1" end="${totalPages}">
-	<a href="<c:url value="/index?page=${i}"/>" >
-		 <c:out value="${i}"/>
+<fmt:message key="page.pages"/>
+<c:if test="${page > 0 }">
+	<a href="<c:url value="/index?page=1"/>" >
+		 &lt;&lt;
 	</a>
-</c:forEach>
+	<a href="<c:url value="/index?page=${page}"/>" >
+		 &lt;
+	</a>
+</c:if>
+<c:out value="${page + 1}"/>
+<c:if test="${page < totalPages - 1 }">
+	<a href="<c:url value="/index?page=${page + 2}"/>" >
+		 &gt;
+	</a>
+	<a href="<c:url value="/index?page=${totalPages - 1}"/>" >
+		 &gt;&gt;
+	</a>
+</c:if>

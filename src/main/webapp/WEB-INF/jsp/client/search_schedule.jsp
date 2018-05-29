@@ -12,9 +12,9 @@
     <form method="POST">
 	<input type="submit" formaction="${pageContext.request.contextPath}/index" style="visibility: hidden; display: none;">
 	<fmt:message key="date"/>
-	<input type="date" name="date" value="${date }"> |
+	<input type="date" name="date" value="<c:out value="${date }"/>"> | 
 	<fmt:message key="time"/>
-    <input type="time" name="time" step="3600" value="${time }"/>
+    <input type="time" name="time" step="3600" value="<c:out value="${time }"/>"/> 
      <br/><br/>
      <c:if test="${empty schedules}">
      	<fmt:message key="search.no.results"/>
