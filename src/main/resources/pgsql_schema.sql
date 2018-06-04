@@ -1,3 +1,7 @@
+-- SELECT version();
+-- PostgreSQL 9.3.18 on x86_64-unknown-linux-gnu, compiled by gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4, 64-bit
+
+
 CREATE DATABASE salon;
 GRANT ALL PRIVILEGES ON DATABASE salon TO lexa;
 
@@ -134,6 +138,53 @@ $$ LANGUAGE PLPGSQL;
 CREATE TRIGGER delete_schedule_trigger BEFORE DELETE ON schedule_t
 FOR EACH ROW
 EXECUTE PROCEDURE delete_schedule();
+
+CREATE OR REPLACE FUNCTION delete_old_schedules() 
+RETURNS void AS
+$$ 
+BEGIN
+  DELETE FROM schedule_t WHERE sc_day < NOW() - INTERVAL '7 days';
+END;
+$$ LANGUAGE PLPGSQL;
+-- SELECT delete_old_schedules();
+
+CREATE OR REPLACE FUNCTION keep_one_admin()
+RETURNS TRIGGER AS
+$$ 
+DECLARE
+  admin_count INT;
+BEGIN
+  SELECT COUNT(*) INTO admin_count
+  FROM user_t WHERE us_role = 'ADMIN';
+  IF admin_count < 1 AND NEW.us_role != 'ADMIN' THEN
+    RAISE EXCEPTION 'no admin';
+  END IF;
+  IF admin_count > 0 AND NEW.us_role = 'ADMIN' THEN
+    RAISE EXCEPTION 'there are already admin';
+  END IF;
+  RETURN new;
+END;
+$$ LANGUAGE PLPGSQL;
+
+-- DROP TRIGGER admin_integrity_trigger ON user_t;
+CREATE TRIGGER admin_integrity_trigger BEFORE INSERT OR UPDATE ON user_t
+FOR EACH ROW
+EXECUTE PROCEDURE keep_one_admin();
+
+CREATE OR REPLACE FUNCTION keep_one_admin_2()
+RETURNS TRIGGER AS
+$$ 
+BEGIN
+  IF OLD.us_role = 'ADMIN' THEN
+    RAISE EXCEPTION 'cannot delete one admin';
+  END IF;
+  RETURN OLD;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE TRIGGER admin_integrity_delete_trigger BEFORE DELETE ON user_t
+FOR EACH ROW
+EXECUTE PROCEDURE keep_one_admin_2();
 
 /*
   Sample transactions:
