@@ -154,6 +154,12 @@ $$
 DECLARE
   admin_count INT;
 BEGIN
+  /*
+   * IF NEW.us_role = 'ADMIN' THEN 
+   *   RAISE EXCEPTION 'no more admins';
+   * END IF;
+   * RETURN NEW;
+   */
   SELECT COUNT(*) INTO admin_count
   FROM user_t WHERE us_role = 'ADMIN';
   IF admin_count < 1 AND NEW.us_role != 'ADMIN' THEN

@@ -16,7 +16,7 @@ public enum DatabaseProperties {
     US_ROLE("us_role"),
     US_NAME_UNIQUE("us_name_un"),
     US_EMAIL_UNIQUE("us_email_un"),
-    US_SELECT_ALL("SELECT * FROM user_t order by upper(us_role)"),
+    US_SELECT_ALL("SELECT * FROM user_t ORDER BY us_role"),
     US_SELECT_BY_ID("SELECT * FROM user_t WHERE us_id = ?"),
     US_SELECT_BY_EMAIL("SELECT * FROM user_t WHERE us_email = ?"),
     US_SELECT_BY_NAME("SELECT * FROM user_t WHERE us_name = ?"),
@@ -35,13 +35,13 @@ public enum DatabaseProperties {
     SC_SELECT_ALL("SELECT * FROM schedule_t INNER JOIN user_t ON us_id = sc_master_id"),
     SC_SELECT_COUNT("SELECT COUNT(*) FROM schedule_t INNER JOIN user_t ON us_id = sc_master_id"),
     SC_SELECT_LIMIT("WITH tmp AS ( SELECT * FROM schedule_t INNER JOIN user_t ON sc_master_id = us_id "
-            + "ORDER BY sc_master_id, sc_day LIMIT ? OFFSET ?) "
-            + "SELECT * FROM tmp LEFT JOIN schedule_occupied_time_t ON so_sc_id = sc_id ORDER BY sc_master_id, sc_day;"),
+            + "ORDER BY sc_master_id, sc_day DESC LIMIT ? OFFSET ?) "
+            + "SELECT * FROM tmp LEFT JOIN schedule_occupied_time_t ON so_sc_id = sc_id ORDER BY sc_master_id, sc_day DESC;"),
     SC_SELECT_BY_DATE_LIMIT("SELECT * FROM schedule_t INNER JOIN user_t ON us_id = sc_master_id "
             + "ORDER BY sc_day LIMIT ? OFFSET ?"),
     SC_SELECT_BY_MASTER("SELECT * FROM schedule_t WHERE sc_master_id = ?"),
     SC_SELECT_BY_MASTER_WITH_RECORDS("SELECT * FROM schedule_t LEFT JOIN schedule_record_m2m ON sc_id = sr_sc_id "
-            + "LEFT JOIN record_t ON sr_rc_id = rc_id WHERE sc_master_id = ? ORDER BY sc_day, rc_start_time"),
+            + "LEFT JOIN record_t ON sr_rc_id = rc_id WHERE sc_master_id = ? ORDER BY sc_day DESC, rc_start_time"),
     SC_SELECT_FREE_BY_DAY_AND_TIME("SELECT * FROM schedule_t INNER JOIN user_t ON us_id = sc_master_id "
             + "WHERE sc_id NOT IN ( "
             + "SELECT so_sc_id FROM schedule_occupied_time_t WHERE so_time = ? ) "
@@ -58,7 +58,7 @@ public enum DatabaseProperties {
     RC_SELECT_ALL("SELECT * FROM record_t"),
     RC_SELECT_ALL_WITH_MASTER_COMMENT("SELECT * FROM record_t LEFT JOIN comment_t ON rc_comment_id = cm_id "
             + "INNER JOIN schedule_record_m2m ON rc_id = sr_rc_id INNER JOIN schedule_t ON sr_sc_id = sc_id "
-            + "INNER JOIN user_t ON sc_master_id = us_id WHERE rc_client_id = ? ORDER BY rc_day, rc_start_time"),
+            + "INNER JOIN user_t ON sc_master_id = us_id WHERE rc_client_id = ? ORDER BY rc_day DESC, rc_start_time"),
     RC_SELECT_BY_ID("SELECT * FROM record_t WHERE rc_id = ?"),
     RC_SELECT_BY_CLIENT("SELECT * FROM record_t WHERE rc_client_id = ?"),
     RC_SELECT_ALL_COMMENTS("SELECT * FROM record_t INNER JOIN user_t ON rc_client_id = us_id "
