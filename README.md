@@ -6,14 +6,16 @@
 
 ### Installation instructions:
 
-1. Setup https://www.postgresql.org/ database
+1. Setup https://www.postgresql.org/ database version 9.3
 2. Create project schema [pgsql_schema.sql](src/main/resources/pgsql_schema.sql)
 
 ### Setup instructions:
 
-1. Install maven http://www.apache-maven.ru/install.html
-2. In project directory open terminal
-3. Enter command "mvn tomcat7:run"
-4. Open browser and follow the link http://localhost:8888/
+1. Install java 8+ https://www.oracle.com/technetwork/java/javase/downloads/index.html
+2. Install maven 3.6+ https://maven.apache.org/install.html
+3. In project directory open terminal
+4. Build project "mvn clean package"
+5. Enter command "mvn tomcat7:run"
+6. Open browser and follow the link http://localhost:8888/
 
 
