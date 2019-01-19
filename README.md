@@ -15,7 +15,10 @@
 2. Install maven 3.6+ https://maven.apache.org/install.html
 3. In project directory open terminal
 4. Build project "mvn clean package"
-5. Enter command "mvn tomcat7:run"
+5. Start application "mvn tomcat7:run" 
+   OR install tomcat 7 https://tomcat.apache.org/tomcat-7.0-doc/setup.html
+      and deploy "cp target/salon.war ~/apache-tomcat/webapps"
+      start server "~/apache-tomcat/bin/startup.sh"
 6. Open browser and follow the link http://localhost:8888/
 
 
